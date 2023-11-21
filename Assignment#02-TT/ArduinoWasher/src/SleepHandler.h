@@ -4,10 +4,14 @@
 #include <Arduino.h>
 #include "TaskHandler.h"
 #include "SleepTask.h"
+#include "Pir.h"
 
-#define PHOTORES_PIN A0
+#define PIR_PIN 2
 
 class SleepHandler : public TaskHandler {
+private:
+  Pir* pir;
+  SleepTask* sleep;
 public:
   void initTasks();
   int getInterruptPin();

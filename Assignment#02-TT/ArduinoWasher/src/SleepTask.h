@@ -3,6 +3,7 @@
 
 #include "Task.h"
 #include <avr/sleep.h>
+#include <Arduino.h>
 
 class SleepTask: public Task {
   public:

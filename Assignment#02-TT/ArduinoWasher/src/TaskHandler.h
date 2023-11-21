@@ -1,16 +1,19 @@
 #ifndef __TASK_HANDLER__
 #define __TASK_HANDLER__
+#define MAX_TASKS 50
 
 #include "Task.h"
 
 class TaskHandler {
 
 protected:
-  Task** tasksHandled;
+  Task* tasksHandled[MAX_TASKS];
 
 public:
   virtual void initTasks() {
-    tasksHandled = new Task*[0];
+    for (int i = 0; i < MAX_TASKS; i++) {
+      tasksHandled[i] = NULL;
+    }
   }
 
   virtual Task** getTasks() {

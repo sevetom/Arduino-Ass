@@ -44,6 +44,7 @@ void Scheduler::schedule(){
 
   for (int i = 0; i < nTasks; i++){
     if (taskList[i]->updateAndCheckTime(basePeriod)){
+      Serial.println("Eseguo task: " + String(i));
       taskList[i]->tick();
     }
   }

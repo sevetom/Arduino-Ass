@@ -23,7 +23,7 @@ class View:
         self.frame_button = tk.Frame(self.root)
         self.frame_button.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=10)
         
-        self.button = tk.Button(self.frame_button, text="Intervieni", command=self.on_click)
+        self.button = tk.Button(self.frame_button, text="Maintenance done", command=self.on_click)
         self.button.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         
     def configure_main_window(self):
