@@ -2,6 +2,7 @@
 #define __PIR__
 
 #include <Arduino.h>
+#include <EnableInterrupt.h>
 
 #define CALIBRATION_TIME_SEC 3
 
@@ -14,7 +15,8 @@ public:
     bool isDetected();
     void setDetected(bool detected);
     void getDetectedStatus();
-    void enableInterrupt(void (*callback)());
+    void enInterrupt(interruptFunctionType interruptFunction);
+    void disInterrupt();
 };
 
 #endif

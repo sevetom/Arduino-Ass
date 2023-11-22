@@ -1,7 +1,6 @@
 #ifndef __SLEEP_HANDLER__
 #define __SLEEP_HANDLER__
 
-#include <Arduino.h>
 #include "TaskHandler.h"
 #include "SleepTask.h"
 #include "Pir.h"
@@ -13,9 +12,9 @@ private:
   Pir* pir;
   SleepTask* sleep;
 public:
-  void initTasks();
-  int getInterruptPin();
-  void afterInterrupt();
+  void initTasks(StateHandlerTask* stateHandlerTask);
+  void setChangeState(bool state);
+  void afterChangeState();
 };
 
 #endif

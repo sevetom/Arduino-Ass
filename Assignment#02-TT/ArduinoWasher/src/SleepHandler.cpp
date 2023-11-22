@@ -1,6 +1,7 @@
 #include "SleepHandler.h"
 
-void SleepHandler::initTasks(){
+void SleepHandler::initTasks(StateHandlerTask* stateHandlerTask){
+  TaskHandler::stateHandlerTask = stateHandlerTask;
   this->pir = new Pir(PIR_PIN);
   this->pir->init();
   sleep = new SleepTask();
@@ -8,12 +9,17 @@ void SleepHandler::initTasks(){
   tasksHandled[0] = sleep;
 }
 
-int SleepHandler::getInterruptPin() {
-  return PIR_PIN;
+void SleepHandler::setChangeState(bool state) {
+  if (state){
+    this->pir->enInterrupt([this](){
+      TaskHandler::stateHandlerTask->changeState();
+    });
+  } else {
+    this->pir->disInterrupt();
+  }
 }
 
-void SleepHandler::afterInterrupt() {
+void SleepHandler::afterChangeState() {
   sleep_disable();
-  delay(200);
-  Serial.println("Sono sveglio, Danilooo!");
+  Serial.flush();
 }

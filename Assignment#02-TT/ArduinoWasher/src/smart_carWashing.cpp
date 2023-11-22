@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <EnableInterrupt.h>
 #include "Scheduler.h"
+#include "StateHandlerTask.h"
 #include "TaskHandler.h"
 #include "SleepHandler.h"
 #include "WelcomeHandler.h"
@@ -17,17 +18,16 @@ typedef enum {
   LEAVED
 } taskHandlerType;
 
-void changeTasks();
-void insertTasks(Task** list);
-
 Scheduler sched;
 TaskHandler* taskHandlers[TASK_HANDLERS];
-int currentHandler;
+StateHandlerTask* stateHandlerTask;
 
 void setup() {
 	Serial.begin(9600);
   sched.init(50);
-  Serial.println("Inizio setup");
+  stateHandlerTask = new StateHandlerTask(&sched, taskHandlers);
+  stateHandlerTask->init(50);
+  sched.addTask(stateHandlerTask);
   taskHandlers[SLEEPING] = new SleepHandler();
   taskHandlers[WELCOME] = new WelcomeHandler();
   /*
@@ -38,34 +38,11 @@ void setup() {
   taskHandlers[LEAVED] = new LeavedHandler();
   */
   for (int i = 0; i < TASK_HANDLERS-5; i++){
-    taskHandlers[i]->initTasks();
+    taskHandlers[i]->initTasks(stateHandlerTask);
   }
-  currentHandler = 0;
-  enableInterrupt(taskHandlers[currentHandler]->getInterruptPin(), changeTasks, CHANGE);
-  insertTasks(taskHandlers[currentHandler]->getTasks());
-  Serial.println("Setup completato");
+  stateHandlerTask->changeTasks();
 }
 
 void loop() {
 	sched.schedule();
-}
-
-void changeTasks() {
-  Serial.println("Cambio task");
-  delay(200);
-  taskHandlers[currentHandler]->afterInterrupt();
-  Serial.println("Dopo afterInterrupt");
-  sched.removeTasks(taskHandlers[currentHandler]->getTasks());
-	disableInterrupt(taskHandlers[currentHandler]->getInterruptPin());
-  currentHandler = currentHandler >= TASK_HANDLERS ? 0 : currentHandler+1;
-  enableInterrupt(taskHandlers[currentHandler]->getInterruptPin(), changeTasks, CHANGE);
-  insertTasks(taskHandlers[currentHandler]->getTasks());
-}
-
-void insertTasks(Task** list) {
-  int cur = 0;
-  while(list[cur] != NULL) {
-    sched.addTask(list[cur]);
-    cur++;
-  }
 }
