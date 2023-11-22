@@ -28,3 +28,8 @@ void Pir::getDetectedStatus() {
   Serial.println(this->detectedStatus);
 }
 
+void Pir::enableInterrupt(void (*callback)()) {
+  if (callback != NULL) {
+    attachInterrupt(digitalPinToInterrupt(this->pin), callback, CHANGE);
+  }
+}

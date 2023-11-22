@@ -14,6 +14,7 @@ public:
     bool isDetected();
     void setDetected(bool detected);
     void getDetectedStatus();
+    void enableInterrupt(void (*callback)());
 };
 
 #endif
