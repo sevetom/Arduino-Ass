@@ -8,12 +8,13 @@
 class TaskHandler {
 
 protected:
-  StateHandlerTask* stateHandlerTask;
+  using ChangeFun = void(*)();
+  ChangeFun changeFun;
   Task* tasksHandled[MAX_TASKS];
 
 public:
-  virtual void initTasks(StateHandlerTask* stateHandlerTask) {
-    this->stateHandlerTask = stateHandlerTask;
+  virtual void initTasks(ChangeFun f) {
+    this->changeFun = f;
     for (int i = 0; i < MAX_TASKS; i++) {
       tasksHandled[i] = NULL;
     }

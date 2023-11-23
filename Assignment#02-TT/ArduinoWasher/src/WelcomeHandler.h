@@ -1,16 +1,23 @@
 #ifndef __WELCOME_HANDLER__
 #define __WELCOME_HANDLER__
 
-#include <Arduino.h>
+#include "TaskHandler.h"
+#include "LedTask.h"
+#include "LcdTask.h"
+#include <arduino-timer.h>
 
-class WelcomeHandler
-{
+#define LED_PIN 5
+#define N1 5
+
+class WelcomeHandler : public TaskHandler {
 private:
-    /* data */
+  LedTask* led;
+  LcdTask* lcd;
+  Timer<> timer;
 public:
-    WelcomeHandler(/* args */);
-    
+  void initTasks(ChangeFun f);
+  void setChangeState(bool state);
+  void afterChangeState();
 };
-
 
 #endif

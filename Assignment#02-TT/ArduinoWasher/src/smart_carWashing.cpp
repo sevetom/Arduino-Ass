@@ -38,7 +38,7 @@ void setup() {
   taskHandlers[LEAVED] = new LeavedHandler();
   */
   for (int i = 0; i < TASK_HANDLERS-5; i++){
-    taskHandlers[i]->initTasks(stateHandlerTask);
+    taskHandlers[i]->initTasks([](){ stateHandlerTask->changeState(); });
   }
   stateHandlerTask->changeTasks();
 }

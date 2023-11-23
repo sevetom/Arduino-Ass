@@ -2,6 +2,7 @@
 #define __SLEEP_HANDLER__
 
 #include "TaskHandler.h"
+#include "StateHandlerTask.h"
 #include "SleepTask.h"
 #include "Pir.h"
 
@@ -12,7 +13,7 @@ private:
   Pir* pir;
   SleepTask* sleep;
 public:
-  void initTasks(StateHandlerTask* stateHandlerTask);
+  void initTasks(ChangeFun f);
   void setChangeState(bool state);
   void afterChangeState();
 };
