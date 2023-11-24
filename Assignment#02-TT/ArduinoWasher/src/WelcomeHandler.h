@@ -4,7 +4,7 @@
 #include "TaskHandler.h"
 #include "LedTask.h"
 #include "LcdTask.h"
-#include <arduino-timer.h>
+#include "CountDown.h"
 
 #define LED_PIN 5
 #define N1 5
@@ -13,7 +13,7 @@ class WelcomeHandler : public TaskHandler {
 private:
   LedTask* led;
   LcdTask* lcd;
-  Timer<> timer;
+  CountDown* timer;
 public:
   void initTasks(ChangeFun f);
   void setChangeState(bool state);
