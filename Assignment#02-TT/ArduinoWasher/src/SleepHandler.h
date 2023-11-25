@@ -1,7 +1,6 @@
 #ifndef __SLEEP_HANDLER__
 #define __SLEEP_HANDLER__
 
-#include "TaskHandler.h"
 #include "StateHandlerTask.h"
 #include "SleepTask.h"
 #include "Pir.h"

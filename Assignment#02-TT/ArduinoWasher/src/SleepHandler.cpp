@@ -10,11 +10,7 @@ void SleepHandler::initTasks(ChangeFun f){
 }
 
 void SleepHandler::setChangeState(bool state) {
-  if (state){
-    this->pir->enInterrupt(changeFun);
-  } else {
-    this->pir->disInterrupt();
-  }
+  this->pir->setInterrupt(TaskHandler::changeFun, state);
 }
 
 void SleepHandler::afterChangeState() {

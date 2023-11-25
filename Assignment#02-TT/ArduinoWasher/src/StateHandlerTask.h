@@ -1,9 +1,6 @@
 #ifndef __STATEHANDLERTASK__
 #define __STATEHANDLERTASK__
 
-#include <stdlib.h>
-#include <EnableInterrupt.h>
-#include "Task.h"
 #include "Scheduler.h"
 #include "TaskHandler.h"
 

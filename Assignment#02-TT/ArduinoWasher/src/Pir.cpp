@@ -28,10 +28,10 @@ void Pir::getDetectedStatus() {
   Serial.println(this->detectedStatus);
 }
 
-void Pir::enInterrupt(interruptFunctionType interruptFunction) {
-  enableInterrupt(this->pin, interruptFunction, CHANGE);
-}
-
-void Pir::disInterrupt() {
-  disableInterrupt(this->pin);
+void Pir::setInterrupt(interruptFunctionType interruptFunction, bool attach) {
+  if (attach) {
+    enableInterrupt(this->pin, interruptFunction, CHANGE);
+  } else {
+    disableInterrupt(this->pin);
+  }
 }

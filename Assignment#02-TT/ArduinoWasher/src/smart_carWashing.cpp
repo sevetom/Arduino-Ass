@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <EnableInterrupt.h>
 #include "Scheduler.h"
 #include "StateHandlerTask.h"
 #include "TaskHandler.h"
