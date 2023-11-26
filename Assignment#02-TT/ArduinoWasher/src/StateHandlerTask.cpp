@@ -27,6 +27,7 @@ void StateHandlerTask::tick() {
 }
 
 void StateHandlerTask::changeTasks() {
+  Serial.println("Changing tasks...");
   if (this->currentHandler != -1) {
     this->sched->removeTasks(taskHandlers[currentHandler]->getTasks());
     this->taskHandlers[currentHandler]->setChangeState(false);
@@ -34,6 +35,7 @@ void StateHandlerTask::changeTasks() {
   this->currentHandler = currentHandler >= this->handlerCount ? 0 : currentHandler+1;
   this->taskHandlers[currentHandler]->setChangeState(true);
   insertTasks(this->taskHandlers[currentHandler]->getTasks());
+  Serial.println("Tasks changed!");
 }
 
 void StateHandlerTask::insertTasks(Task** list) {

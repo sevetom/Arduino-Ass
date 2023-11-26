@@ -3,6 +3,7 @@
 
 #include "Scheduler.h"
 #include "TaskHandler.h"
+#include <Arduino.h>
 
 class StateHandlerTask : public Task {
 private:

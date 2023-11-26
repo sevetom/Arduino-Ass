@@ -30,12 +30,11 @@ void Scheduler::removeTasks(Task** tasks){
   int j = 0;
   for (int i = 0; i < nTasks; i++){
     if (taskList[i] == tasks[j]){
-      free(taskList[i]);
-      taskList[i] = NULL;
+      taskList[i] = nullptr;
       j++;
-      if (j == nTasks) break;
     }
   }
+  nTasks -= j;
 }
   
 void Scheduler::schedule(){   

@@ -2,7 +2,6 @@
 #define __LED_TASK__
 
 #include "Task.h"
-#include <Arduino.h>
 #include "Led.h"
 
 class LedTask : public Task {

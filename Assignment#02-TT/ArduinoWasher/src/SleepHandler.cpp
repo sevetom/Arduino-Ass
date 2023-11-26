@@ -12,8 +12,3 @@ void SleepHandler::initTasks(ChangeFun f){
 void SleepHandler::setChangeState(bool state) {
   this->pir->setInterrupt(TaskHandler::changeFun, state);
 }
-
-void SleepHandler::afterChangeState() {
-  sleep_disable();
-  Serial.flush();
-}

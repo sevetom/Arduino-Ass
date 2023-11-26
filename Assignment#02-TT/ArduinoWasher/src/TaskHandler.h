@@ -25,8 +25,6 @@ public:
   }
 
   virtual void setChangeState(bool state) = 0;
-
-  virtual void afterChangeState() = 0;
 };
 
 #endif

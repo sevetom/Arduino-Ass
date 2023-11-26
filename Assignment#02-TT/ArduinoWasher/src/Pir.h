@@ -2,11 +2,11 @@
 #define __PIR__
 
 #include <Arduino.h>
-#include <EnableInterrupt.h>
 
-#define CALIBRATION_TIME_SEC 3
+#define CALIBRATION_TIME_SEC 10
 
 class Pir {
+    using interruptFun = void (*)(void);
     bool detectedStatus;
     int pin;
 public:
@@ -15,7 +15,7 @@ public:
     bool isDetected();
     void setDetected(bool detected);
     void getDetectedStatus();
-    void setInterrupt(interruptFunctionType interruptFunction, bool attach);
+    void setInterrupt(interruptFun interruptFunction, bool attach);
 };
 
 #endif

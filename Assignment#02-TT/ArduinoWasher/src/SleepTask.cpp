@@ -8,8 +8,11 @@ void SleepTask::init(int period) {
 }
 
 void SleepTask::tick() {
-  Serial.println("Vado a letto...");
+  Serial.println("Going to sleep...");
   delay(200);
   sleep_enable();
   sleep_mode();
+  // sleeping...
+  sleep_disable();
+  Serial.flush();
 }

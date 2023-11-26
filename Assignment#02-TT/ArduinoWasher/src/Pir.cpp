@@ -28,10 +28,10 @@ void Pir::getDetectedStatus() {
   Serial.println(this->detectedStatus);
 }
 
-void Pir::setInterrupt(interruptFunctionType interruptFunction, bool attach) {
+void Pir::setInterrupt(interruptFun interruptFunction, bool attach) {
   if (attach) {
-    enableInterrupt(this->pin, interruptFunction, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(this->pin), interruptFunction, CHANGE);
   } else {
-    disableInterrupt(this->pin);
+    detachInterrupt(digitalPinToInterrupt(this->pin));
   }
 }
