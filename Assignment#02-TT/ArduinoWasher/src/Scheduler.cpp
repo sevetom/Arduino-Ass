@@ -13,38 +13,40 @@ void Scheduler::init(int basePeriod){
   long period = 1000l*basePeriod;
   Timer1.initialize(period);
   Timer1.attachInterrupt(timerHandler);
-  nTasks = 0;
+  this->nTasks = 0;
+  this->startWindow = 1;
+  this->endWindow = 1;
 }
 
 bool Scheduler::addTask(Task* task){
-  if (nTasks < MAX_TASKS-1){
-    taskList[nTasks] = task;
-    nTasks++;
+  if (this->nTasks < MAX_TASKS-1){
+    this->taskList[nTasks] = task;
+    this->nTasks++;
     return true;
   } else {
     return false; 
   }
 }
 
-void Scheduler::removeTasks(Task** tasks){
-  int j = 0;
-  for (int i = 0; i < nTasks; i++){
-    if (taskList[i] == tasks[j]){
-      taskList[i] = nullptr;
-      j++;
-    }
-  }
-  nTasks -= j;
+void Scheduler::shiftTasks(int shift){
+  this->startWindow = this->endWindow;
+  this->endWindow += shift;
+  Serial.println("Start: " + String(this->startWindow) + " - End: " + String(this->endWindow) + " - Shift: " + String(shift));
 }
   
 void Scheduler::schedule(){   
   while (!timerFlag){}
   timerFlag = false;
-
-  for (int i = 0; i < nTasks; i++){
-    if (taskList[i]->updateAndCheckTime(basePeriod)){
+  if (this->taskList[0]->updateAndCheckTime(basePeriod)) {
+    Serial.println("Eseguo task: 0");
+    this->taskList[0]->tick();
+  }
+  Serial.println("Entro nel for: " + String(this->startWindow) + " - " + String(this->endWindow));
+  for (int i = this->startWindow; i < this->endWindow; i++){
+    Serial.println("Controllo task: " + String(i));
+    if (this->taskList[i]->updateAndCheckTime(basePeriod)){
       Serial.println("Eseguo task: " + String(i));
-      taskList[i]->tick();
+      this->taskList[i]->tick();
     }
   }
 }

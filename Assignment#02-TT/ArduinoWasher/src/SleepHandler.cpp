@@ -12,3 +12,7 @@ void SleepHandler::initTasks(ChangeFun f){
 void SleepHandler::setChangeState(bool state) {
   this->pir->setInterrupt(TaskHandler::changeFun, state);
 }
+
+int SleepHandler::getTasksCount() {
+  return SLEEP_TASKS_COUNT;
+}

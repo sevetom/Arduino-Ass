@@ -9,12 +9,14 @@ class Scheduler {
   
   int basePeriod;
   int nTasks;
+  int startWindow;
+  int endWindow;
   Task* taskList[MAX_TASKS];  
 
 public:
   void init(int basePeriod);  
   bool addTask(Task* task);  
-  void removeTasks(Task** tasks);
+  void shiftTasks(int shift);
   void schedule();
 };
 

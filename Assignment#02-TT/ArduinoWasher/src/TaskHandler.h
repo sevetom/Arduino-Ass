@@ -24,6 +24,8 @@ public:
     return tasksHandled;
   }
 
+  virtual int getTasksCount() = 0;
+
   virtual void setChangeState(bool state) = 0;
 };
 

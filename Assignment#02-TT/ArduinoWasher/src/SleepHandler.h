@@ -5,6 +5,7 @@
 #include "SleepTask.h"
 #include "Pir.h"
 
+#define SLEEP_TASKS_COUNT 1
 #define PIR_PIN 2
 
 class SleepHandler : public TaskHandler {
@@ -14,7 +15,7 @@ private:
 public:
   void initTasks(ChangeFun f);
   void setChangeState(bool state);
-  void afterChangeState();
+  int getTasksCount();
 };
 
 #endif

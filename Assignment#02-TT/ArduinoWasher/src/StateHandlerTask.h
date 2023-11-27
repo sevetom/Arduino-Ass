@@ -14,12 +14,12 @@ private:
     bool change;
 
 public:
-    StateHandlerTask(Scheduler* sched, TaskHandler** taskHandlers);
+    StateHandlerTask(Scheduler* sched, TaskHandler** taskHandlers, int handlerCount);
     void changeState();
     void init(int period);  
     void tick();
     void changeTasks();
-    void insertTasks(Task** list);
+    bool getChangeState() { return this->change; }
 };
 
 #endif

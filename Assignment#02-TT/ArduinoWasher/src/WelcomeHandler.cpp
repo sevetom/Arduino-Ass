@@ -2,9 +2,9 @@
 
 void WelcomeHandler::initTasks(ChangeFun f){
   this->led = new LedTask(LED_PIN);
-  this->led->init(150);
+  this->led->init(500);
   this->lcd = new LcdTask();
-  this->lcd->init(150);
+  this->lcd->init(500);
   this->timer = new CountDown(N1, [](void* fun) -> bool {
     ChangeFun changeFunction = reinterpret_cast<ChangeFun>(fun);
     changeFunction();
@@ -14,6 +14,7 @@ void WelcomeHandler::initTasks(ChangeFun f){
   tasksHandled[0] = led;
   tasksHandled[1] = lcd;
   tasksHandled[2] = timer;
+  Serial.println("WelcomeHandler initialized!");;
 }
 
 void WelcomeHandler::setChangeState(bool state) {
@@ -24,4 +25,6 @@ void WelcomeHandler::setChangeState(bool state) {
   }
 }
 
-void WelcomeHandler::afterChangeState() { }
+int WelcomeHandler::getTasksCount() {
+  return WELCOME_TASKS_COUNT;
+}
