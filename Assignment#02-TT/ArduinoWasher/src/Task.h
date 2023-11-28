@@ -3,21 +3,21 @@
 
 class Task {
 protected:
-  int myPeriod;
-  int timeElapsed;
+  long myPeriod;
+  long timeElapsed;
   
 public:
-  virtual void init(int period){
+  virtual void init(long period){
     myPeriod = period;  
     timeElapsed = 0;
   }
 
   virtual void tick() = 0;
 
-  bool updateAndCheckTime(int basePeriod){
+  bool updateAndCheckTime(long basePeriod){
     timeElapsed += basePeriod;
     if (timeElapsed >= myPeriod){
-      timeElapsed = 0;
+      timeElapsed -= myPeriod;
       return true;
     } else {
       return false; 

@@ -7,17 +7,18 @@
 
 class Scheduler {
   
-  int basePeriod;
+  long basePeriod;
   int nTasks;
   int startWindow;
   int endWindow;
-  Task* taskList[MAX_TASKS];  
+  Task* taskList[MAX_TASKS];
 
 public:
-  void init(int basePeriod);  
+  void init(long basePeriod);  
   bool addTask(Task* task);  
   void shiftTasks(int shift);
   void schedule();
+  void printTasks();
 };
 
 #endif

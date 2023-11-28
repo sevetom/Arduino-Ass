@@ -1,8 +1,9 @@
 #include "LcdTask.h"
 
-LcdTask::LcdTask() {
+LcdTask::LcdTask(const char* message) {
   this->lcd = new LcdDisplay();
   this->lcd->init();
+  this->message = message;
 }
 
 void LcdTask::init(int period) {
@@ -11,6 +12,6 @@ void LcdTask::init(int period) {
 
 void LcdTask::tick() {
   if (!this->lcd->getPrintStatus()) {
-    this->lcd->print("Welcome", 4);
+    this->lcd->print(message);
   }
 }

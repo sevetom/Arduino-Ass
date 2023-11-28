@@ -5,14 +5,14 @@ Gate::Gate(int pin) {
   this->myservo.attach(this->pin);
 }
 
-void Gate::open90() {
+void Gate::open() {
   this->myservo.write(80);
-  delay(500);
-  this->myservo.write(90);
 }
 
-void Gate::close90() {
+void Gate::close() {
   this->myservo.write(100);
-  delay(550);
+}
+
+void Gate::stop() {
   this->myservo.write(90);
 }

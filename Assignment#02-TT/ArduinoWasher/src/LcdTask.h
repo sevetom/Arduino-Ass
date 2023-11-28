@@ -7,8 +7,9 @@
 class LcdTask : public Task {
 private:
   LcdDisplay* lcd;
+  const char* message;
 public:
-  LcdTask();
+  LcdTask(const char* message);
   void init(int period);
   void tick();
 };

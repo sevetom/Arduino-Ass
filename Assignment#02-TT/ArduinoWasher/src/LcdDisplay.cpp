@@ -3,6 +3,7 @@
 void LcdDisplay::init() {
   this->lcd.init();
   this->lcd.backlight();
+  this->lcd.clear();
   this->printed = false;
 }
 

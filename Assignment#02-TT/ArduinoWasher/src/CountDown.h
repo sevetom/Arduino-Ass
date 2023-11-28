@@ -1,5 +1,5 @@
-#ifndef __ARDUINO_TIMER__
-#define __ARDUINO_TIMER__
+#ifndef __COUNT_DOWN__
+#define __COUNT_DOWN__
 
 #include "Task.h"
 #include <Arduino.h>

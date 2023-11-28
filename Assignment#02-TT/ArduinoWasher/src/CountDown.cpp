@@ -2,9 +2,8 @@
 
 CountDown::CountDown(long time, InterruptFun f) {
   this->waitTime = time;
-  this->currentTime = 0;
-  this->isRunning = false;
   this->interruptFunction = f;
+  this->currentTime = 0;
 }
 
 void CountDown::init(int period) {
@@ -13,7 +12,7 @@ void CountDown::init(int period) {
 
 void CountDown::tick() {
   if (this->isRunning) {
-    this->currentTime += Task::myPeriod;
+    this->currentTime += this->myPeriod + this->timeElapsed;
     if (this->currentTime >= this->waitTime) {
       this->reset();
       this->interruptFunction();

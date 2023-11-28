@@ -9,8 +9,9 @@ class Gate{
     Servo myservo;
 public:
     Gate(int pin);
-    void open90();
-    void close90();
+    void open();
+    void close();
+    void stop();
 };
 
 #endif

@@ -7,7 +7,7 @@ void timerHandler(void){
   timerFlag = true;
 }
 
-void Scheduler::init(int basePeriod){
+void Scheduler::init(long basePeriod){
   this->basePeriod = basePeriod;
   timerFlag = false;
   long period = 1000l*basePeriod;
@@ -35,16 +35,24 @@ void Scheduler::shiftTasks(int shift){
   
 void Scheduler::schedule(){   
   while (!timerFlag){}
+  Timer1.setPeriod(this->basePeriod*1000l);
   timerFlag = false;
-  if (this->taskList[0]->updateAndCheckTime(basePeriod)) {
+  if (this->taskList[0]->updateAndCheckTime(this->basePeriod)) {
     Serial.println("Eseguo task: 0");
     this->taskList[0]->tick();
   }
   Serial.println("Entro nel for: " + String(this->startWindow) + " - " + String(this->endWindow));
   for (int i = this->startWindow; i < this->endWindow; i++){
-    if (this->taskList[i]->updateAndCheckTime(basePeriod)){
+    Serial.println("Controllo task: " + String(i));
+    if (this->taskList[i]->updateAndCheckTime(this->basePeriod)){
       Serial.println("Eseguo task: " + String(i));
       this->taskList[i]->tick();
     }
+  }
+}
+
+void Scheduler::printTasks(){
+  for (int i = 0; i < this->nTasks; i++){
+    Serial.println("Task: " + String(i));
   }
 }
