@@ -9,7 +9,6 @@ StateHandlerTask::StateHandlerTask(Scheduler* sched, TaskHandler** taskHandlers,
 }
 
 void StateHandlerTask::changeState() {
-  Serial.println("Changing state...");
   this->change = true;
 }
 
@@ -32,7 +31,6 @@ void StateHandlerTask::changeTasks() {
   this->currentHandler = this->currentHandler >= this->handlerCount ? 0 : this->currentHandler+1;
   this->taskHandlers[currentHandler]->setChangeState(true);
   this->sched->shiftTasks(this->taskHandlers[currentHandler]->getTasksCount());
-  Serial.println("Current handler: " + String(this->currentHandler) + " - Tasks count: " + String(this->taskHandlers[currentHandler]->getTasksCount()));
   Serial.println("Tasks changed!");
 }
 

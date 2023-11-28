@@ -28,7 +28,7 @@ void setup() {
   sched = new Scheduler();
   sched->init(100);
   stateHandlerTask = new StateHandlerTask(sched, taskHandlers, TASK_HANDLERS);
-  stateHandlerTask->init(100);
+  stateHandlerTask->init(150);
   sched->addTask(stateHandlerTask);
   taskHandlers[SLEEPING] = new SleepHandler();
   taskHandlers[WELCOME] = new WelcomeHandler();
@@ -47,7 +47,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("state: " + stateHandlerTask->getChangeState() == 0 ? "false" : "true");
 	sched->schedule();
 }
 

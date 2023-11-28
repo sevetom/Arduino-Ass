@@ -2,16 +2,17 @@
 #define __ARDUINO_TIMER__
 
 #include "Task.h"
-#include <arduino-timer.h>
+#include <Arduino.h>
 
 class CountDown : public Task {
 private:
-  Timer<> timer;
-  unsigned long waitTime;
-  Timer<>::handler_t h;
-  void *opaque;
+  long waitTime;
+  long currentTime;
+  bool isRunning;
+  using InterruptFun = void (*)(void);
+  InterruptFun interruptFunction;
 public:
-  CountDown(unsigned long waitTime, Timer<>::handler_t h, void *opaque);
+  CountDown(long time, InterruptFun f);
   void init(int period);
   void tick();
   void start();

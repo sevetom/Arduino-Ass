@@ -2,6 +2,7 @@
 
 LcdTask::LcdTask() {
   this->lcd = new LcdDisplay();
+  this->lcd->init();
 }
 
 void LcdTask::init(int period) {
@@ -9,5 +10,7 @@ void LcdTask::init(int period) {
 }
 
 void LcdTask::tick() {
-  this->lcd->print("Welcome");
+  if (!this->lcd->getPrintStatus()) {
+    this->lcd->print("Welcome", 4);
+  }
 }

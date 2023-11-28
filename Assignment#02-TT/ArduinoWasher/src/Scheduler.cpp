@@ -31,7 +31,6 @@ bool Scheduler::addTask(Task* task){
 void Scheduler::shiftTasks(int shift){
   this->startWindow = this->endWindow;
   this->endWindow += shift;
-  Serial.println("Start: " + String(this->startWindow) + " - End: " + String(this->endWindow) + " - Shift: " + String(shift));
 }
   
 void Scheduler::schedule(){   
@@ -43,7 +42,6 @@ void Scheduler::schedule(){
   }
   Serial.println("Entro nel for: " + String(this->startWindow) + " - " + String(this->endWindow));
   for (int i = this->startWindow; i < this->endWindow; i++){
-    Serial.println("Controllo task: " + String(i));
     if (this->taskList[i]->updateAndCheckTime(basePeriod)){
       Serial.println("Eseguo task: " + String(i));
       this->taskList[i]->tick();

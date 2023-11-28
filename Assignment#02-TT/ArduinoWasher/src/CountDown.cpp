@@ -1,10 +1,10 @@
 #include "CountDown.h"
 
-CountDown::CountDown(unsigned long waitTime, Timer<>::handler_t h, void *opaque) {
-  this->waitTime = waitTime;
-  this->h = h;
-  this->opaque = opaque;
-  timer.every(waitTime, h, opaque);
+CountDown::CountDown(long time, InterruptFun f) {
+  this->waitTime = time;
+  this->currentTime = 0;
+  this->isRunning = false;
+  this->interruptFunction = f;
 }
 
 void CountDown::init(int period) {
@@ -12,13 +12,20 @@ void CountDown::init(int period) {
 }
 
 void CountDown::tick() {
-  timer.tick();
+  if (this->isRunning) {
+    this->currentTime += Task::myPeriod;
+    if (this->currentTime >= this->waitTime) {
+      this->reset();
+      this->interruptFunction();
+    }
+  }
 }
 
 void CountDown::start() {
-  timer.in(this->waitTime, this->h, this->opaque);
+  this->isRunning = true;
 }
 
 void CountDown::reset() {
-  timer.cancel();
+  this->isRunning = false;
+  this->currentTime = 0;
 }
