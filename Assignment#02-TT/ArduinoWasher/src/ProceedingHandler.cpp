@@ -5,7 +5,7 @@ void ProceedingHandler::initTasks(ChangeFun f) {
   this->led = new LedTask(PROC_LED_PIN, BLINK);
   this->gate = new GateTask(PROC_GATE_PIN, OPEN);
   this->lcd->init(150);
-  this->led->init(200);
+  this->led->init(300);
   this->gate->init(150);
   tasksHandled[0] = lcd;
   tasksHandled[1] = led;

@@ -7,6 +7,7 @@ Gate::Gate(int pin) {
 
 void Gate::open() {
   this->myservo.write(80);
+  Serial.println("DAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEADAJEDAJEDAJE");
 }
 
 void Gate::close() {
