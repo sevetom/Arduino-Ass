@@ -11,7 +11,7 @@ void Pir::init() {
     Serial.print(".");
     delay(1000);
   }*/
-  Serial.println(" done");
+  Serial.println("done");
   Serial.println("PIR SENSOR READY.");
 }
 

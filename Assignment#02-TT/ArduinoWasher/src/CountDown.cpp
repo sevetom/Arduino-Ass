@@ -28,3 +28,7 @@ void CountDown::reset() {
   this->isRunning = false;
   this->currentTime = 0;
 }
+
+long CountDown::getTime() {
+  return this->currentTime;
+}

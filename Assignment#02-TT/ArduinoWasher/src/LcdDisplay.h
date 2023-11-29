@@ -6,6 +6,7 @@
 
 #include <LiquidCrystal_I2C.h> 
 #include <Arduino.h>
+#include <string.h>
 
 /*
 * Wiring: SDA => A4, SCL => A5
@@ -15,9 +16,8 @@ class LcdDisplay{
     bool printed;
 public:
     void init();
-    void print(const char* text);
-    void print(const char* text, int row);
-    void print(const char* text, int row, int line);
+    void printLong(const char* text);
+    void print(const char* text, int line, int row);
     void clear();
     bool getPrintStatus();
 };

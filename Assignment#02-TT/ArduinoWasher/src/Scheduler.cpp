@@ -38,14 +38,10 @@ void Scheduler::schedule(){
   Timer1.setPeriod(this->basePeriod*1000l);
   timerFlag = false;
   if (this->taskList[0]->updateAndCheckTime(this->basePeriod)) {
-    Serial.println("Eseguo task: 0");
     this->taskList[0]->tick();
   }
-  Serial.println("Entro nel for: " + String(this->startWindow) + " - " + String(this->endWindow));
   for (int i = this->startWindow; i < this->endWindow; i++){
-    Serial.println("Controllo task: " + String(i));
     if (this->taskList[i]->updateAndCheckTime(this->basePeriod)){
-      Serial.println("Eseguo task: " + String(i));
       this->taskList[i]->tick();
     }
   }

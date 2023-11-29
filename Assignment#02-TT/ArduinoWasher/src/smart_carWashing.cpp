@@ -5,6 +5,9 @@
 #include "SleepHandler.h"
 #include "WelcomeHandler.h"
 #include "ProceedingHandler.h"
+#include "EnteredHandler.h"
+#include "WashingHandler.h"
+#include "ExitingHandler.h"
 
 #define TASK_HANDLERS 7
 
@@ -34,20 +37,15 @@ void setup() {
   taskHandlers[SLEEPING] = new SleepHandler();
   taskHandlers[WELCOME] = new WelcomeHandler();
   taskHandlers[PROCEEDING] = new ProceedingHandler();
-  /*
   taskHandlers[ENTERED] = new EnteredHandler();
   taskHandlers[WASHING] = new WashingHandler();
   taskHandlers[EXITING] = new ExitingHandler();
-  taskHandlers[LEAVED] = new LeavedHandler();
-  */
-  for (int i = 0; i < TASK_HANDLERS-4; i++){
+  //taskHandlers[LEAVED] = new LeavedHandler();
+  for (int i = 0; i < TASK_HANDLERS; i++){
     Serial.println("Inserting tasks...");
     taskHandlers[i]->initTasks([](){ stateHandlerTask->changeState(); });
-    Serial.println("Tasks initialized!");
     insertTasks(taskHandlers[i]->getTasks());
-    Serial.println("Tasks inserted!");
   }
-  //Serial.println("Tasks inserted!");
   stateHandlerTask->changeTasks();
 }
 

@@ -5,13 +5,15 @@
 #include <Servo.h>
 
 class Gate{
-    int pin;
-    Servo myservo;
+  int pin;
+  Servo servo;
 public:
-    Gate(int pin);
-    void open();
-    void close();
-    void stop();
+  Gate(int pin);
+  void on();
+  void off();
+  void open();
+  void close();
+  void stop();
 };
 
 #endif

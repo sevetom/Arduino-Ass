@@ -7,9 +7,9 @@ void WelcomeHandler::initTasks(ChangeFun f){
   this->lcd->init(150);
   this->timer = new CountDown(N1, f);
   this->timer->init(150);
-  tasksHandled[0] = led;
-  tasksHandled[1] = lcd;
-  tasksHandled[2] = timer;
+  this->tasksHandled[0] = led;
+  this->tasksHandled[1] = lcd;
+  this->tasksHandled[2] = timer;
 }
 
 void WelcomeHandler::setChangeState(bool state) {

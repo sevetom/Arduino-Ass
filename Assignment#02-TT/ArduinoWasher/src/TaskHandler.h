@@ -1,6 +1,6 @@
 #ifndef __TASK_HANDLER__
 #define __TASK_HANDLER__
-#define MAX_TASKS 50
+#define MAX_HANDLER_TASKS 10
 
 #include "Task.h"
 #include <stdio.h>
@@ -10,12 +10,12 @@ class TaskHandler {
 protected:
   using ChangeFun = void(*)();
   ChangeFun changeFun;
-  Task* tasksHandled[MAX_TASKS];
+  Task* tasksHandled[MAX_HANDLER_TASKS];
 
 public:
   virtual void initTasks(ChangeFun f) {
     this->changeFun = f;
-    for (int i = 0; i < MAX_TASKS; i++) {
+    for (int i = 0; i < MAX_HANDLER_TASKS; i++) {
       tasksHandled[i] = NULL;
     }
   }

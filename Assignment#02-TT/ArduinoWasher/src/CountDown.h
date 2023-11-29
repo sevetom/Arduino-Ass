@@ -17,6 +17,7 @@ public:
   void tick();
   void start();
   void reset();
+  long getTime();
 };
 
 #endif

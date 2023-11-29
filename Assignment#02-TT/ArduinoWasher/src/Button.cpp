@@ -5,6 +5,10 @@ Button::Button(int pin){
     pinMode(pin, INPUT);
 }
 
-bool Button::isPressed(){
-    return digitalRead(pin) == HIGH;
+void Button::setInterrupt(InterruptFunction intFun, bool attach){
+    if(attach){
+        attachInterrupt(digitalPinToInterrupt(pin), intFun, CHANGE);
+    }else{
+        detachInterrupt(digitalPinToInterrupt(pin));
+    }
 }

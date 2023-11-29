@@ -5,9 +5,10 @@
 
 class Button{
     int pin;
+    using InterruptFunction = void (*)(void);
 public:
     Button(int pin);
-    bool isPressed();
+    void setInterrupt(InterruptFunction intFun, bool attach);
 };
 
 #endif

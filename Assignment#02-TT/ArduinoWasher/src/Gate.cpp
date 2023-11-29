@@ -2,18 +2,27 @@
 
 Gate::Gate(int pin) {
   this->pin = pin;
-  this->myservo.attach(this->pin);
+}
+
+void Gate::on() {
+  this->servo.attach(this->pin);
+}
+
+void Gate::off() {
+  this->servo.detach();
 }
 
 void Gate::open() {
-  this->myservo.write(80);
-  Serial.println("DAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEDAJEADAJEDAJEDAJE");
+  this->servo.write(80);
+  Serial.println("angle: " + this->servo.read());
 }
 
 void Gate::close() {
-  this->myservo.write(100);
+  this->servo.write(100);
+  Serial.println("angle: " + this->servo.read());
 }
 
 void Gate::stop() {
-  this->myservo.write(90);
+  this->servo.write(90);
+  Serial.println("angle: " + this->servo.read());
 }
