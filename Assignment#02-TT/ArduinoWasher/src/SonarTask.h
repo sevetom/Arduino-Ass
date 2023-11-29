@@ -12,6 +12,7 @@ typedef enum {
 #define N2 2000
 #define N4 4000
 #define MIN_DIST 0.2
+#define MAX_DIST 0.8
 
 class SonarTask : public Task {
 private:

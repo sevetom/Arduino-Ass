@@ -17,7 +17,7 @@ void SonarTask::tick(){
     long time = this->mode == MAX ? N4 : N2;
     if(this->mode == MAX ? 
       this->sonar->getDistance() < MIN_DIST : 
-      this->sonar->getDistance() > MIN_DIST) {
+      this->sonar->getDistance() > MAX_DIST) {
       if (this->minimumTime >= time) {
         this->setReading(false);
         this->minimumTime = 0;
