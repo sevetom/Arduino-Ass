@@ -17,7 +17,7 @@ private:
   gateMode mode;
   int cycles;
 public:
-  GateTask(int pin, gateMode mode);
+  GateTask(Gate* gate, gateMode mode);
   void init(int period);
   void tick();
 };

@@ -7,7 +7,6 @@
 #include "CountDown.h"
 
 #define WELCOME_TASKS_COUNT 3
-#define WELC_LED_PIN 12
 #define N1 5000
 
 class WelcomeHandler : public TaskHandler {
@@ -16,7 +15,7 @@ private:
   LcdTask* lcd;
   CountDown* timer;
 public:
-  void initTasks(ChangeFun f);
+  void initTasks();
   void setChangeState(bool state);
   int getTasksCount();
 };

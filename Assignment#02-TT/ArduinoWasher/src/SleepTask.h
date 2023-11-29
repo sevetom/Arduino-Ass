@@ -7,7 +7,6 @@
 
 class SleepTask: public Task {
   public:
-    SleepTask();
     void init(int period);  
     void tick();
 };

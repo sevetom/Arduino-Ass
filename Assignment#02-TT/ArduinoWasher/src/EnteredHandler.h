@@ -8,9 +8,6 @@
 #include "Button.h"
 
 #define ENT_TASKS_COUNT 3
-#define ENT_LED_PIN 13
-#define ENT_BUTTON_PIN 3
-#define ENT_GATE_PIN 5
 
 class EnteredHandler : public TaskHandler {
 private:
@@ -19,7 +16,7 @@ private:
   GateTask* gate;
   Button* button;
 public:
-  void initTasks(ChangeFun f);
+  void initTasks();
   void setChangeState(bool state);
   int getTasksCount();
 };

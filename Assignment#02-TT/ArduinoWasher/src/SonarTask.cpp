@@ -1,7 +1,7 @@
 #include "SonarTask.h"
 
-SonarTask::SonarTask(int trigPin, int echoPin, InterruptFunction intFun, SonarMode mode) {
-  this->sonar = new Sonar(trigPin, echoPin);
+SonarTask::SonarTask(Sonar* sonar, InterruptFunction intFun, SonarMode mode) {
+  this->sonar = sonar;
   this->intFun = intFun;
   this->reading = false;
   this->minimumTime = 0;

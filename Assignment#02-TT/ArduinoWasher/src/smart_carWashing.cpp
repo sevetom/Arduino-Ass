@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "WashingComponents.h"
 #include "Scheduler.h"
 #include "StateHandlerTask.h"
 #include "TaskHandler.h"
@@ -9,6 +10,7 @@
 #include "WashingHandler.h"
 #include "ExitingHandler.h"
 #include "LeavedHandler.h"
+#include "TempSensor.h"
 
 #define TASK_HANDLERS 7
 
@@ -25,11 +27,13 @@ typedef enum {
 void insertTasks(Task** list);
 
 Scheduler* sched;
+WashingComponents* hw;
 TaskHandler* taskHandlers[TASK_HANDLERS];
 StateHandlerTask* stateHandlerTask;
 
 void setup() {
 	Serial.begin(9600);
+  hw = new WashingComponents();
   sched = new Scheduler();
   sched->init(50);
   stateHandlerTask = new StateHandlerTask(sched, taskHandlers, TASK_HANDLERS);
@@ -44,7 +48,8 @@ void setup() {
   //taskHandlers[LEAVED] = new LeavedHandler();
   for (int i = 0; i < TASK_HANDLERS - 4; i++){
     Serial.println("Inserting tasks: " + String(i));
-    taskHandlers[i]->initTasks([](){ stateHandlerTask->changeState(); });
+    taskHandlers[i]->setHandler([](){ stateHandlerTask->changeState(); }, hw);
+    taskHandlers[i]->initTasks();
     insertTasks(taskHandlers[i]->getTasks());
   }
   stateHandlerTask->changeTasks();

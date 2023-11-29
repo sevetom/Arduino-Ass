@@ -8,10 +8,6 @@
 #include "SonarTask.h"
 
 #define PROCEEDING_TASKS_COUNT 4
-#define PROC_LED_PIN 13
-#define PROC_GATE_PIN 5
-#define PROC_TRIG_PIN 7
-#define PROC_ECHO_PIN 8
 
 class ProceedingHandler : public TaskHandler{
 private:
@@ -20,7 +16,7 @@ private:
   GateTask* gate;
   SonarTask* sonar;
 public:
-  void initTasks(ChangeFun f);
+  void initTasks();
   void setChangeState(bool state);
   int getTasksCount();
 };

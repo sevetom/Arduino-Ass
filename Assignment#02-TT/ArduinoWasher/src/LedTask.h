@@ -15,7 +15,7 @@ private:
   Led* led;
   ledMode mode;
 public:
-  LedTask(int pin, ledMode mode);
+  LedTask(Led* led, ledMode mode);
   void init(int period);
   void tick();
 };

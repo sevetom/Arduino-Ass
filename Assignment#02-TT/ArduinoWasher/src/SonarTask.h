@@ -23,7 +23,7 @@ private:
   long minimumTime;
   SonarMode mode;
 public:
-  SonarTask(int trigPin, int echoPin, InterruptFunction intFun, SonarMode mode);
+  SonarTask(Sonar* sonar, InterruptFunction intFun, SonarMode mode);
   void init(int period);
   void tick();
   void setReading(bool state);

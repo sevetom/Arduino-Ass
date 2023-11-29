@@ -1,7 +1,7 @@
 #include "LedTask.h"
 
-LedTask::LedTask(int pin, ledMode mode) {
-  this->led = new Led(pin);
+LedTask::LedTask(Led* led, ledMode mode) {
+  this->led = led;
   this->mode = mode;
 }
 

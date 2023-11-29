@@ -1,14 +1,18 @@
 #include "LeavedHandler.h"
 
-void LeavedHandler::initTasks(ChangeFun f) {
-  this->led = new LedTask(LEAVED_LED_PIN, OFF);
-  this->led->init(150);
-  this->gate = new GateTask(LEAVED_GATE_PIN, CLOSE);
+void LeavedHandler::initTasks() {
+  this->led1 = new LedTask(this->hw->green1, OFF);
+  this->led1->init(150);
+  this->led3 = new LedTask(this->hw->green3, OFF);
+  this->led3->init(150);
+  this->gate = new GateTask(this->hw->gate, CLOSE);
   this->gate->init(150);
-  this->timer = new CountDown(N5, f);
+  this->timer = new CountDown(N5, this->changeFun);
   this->timer->init(150);
-  this->tasksHandled[0] = led;
-  this->tasksHandled[1] = gate;
+  this->tasksHandled[0] = led1;
+  this->tasksHandled[1] = led3;
+  this->tasksHandled[2] = gate;
+  this->tasksHandled[3] = timer;
 }
 
 void LeavedHandler::setChangeState(bool state) {

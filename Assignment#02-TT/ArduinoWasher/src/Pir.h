@@ -11,10 +11,6 @@ class Pir {
     int pin;
 public:
     Pir(int pin);
-    void init();
-    bool isDetected();
-    void setDetected(bool detected);
-    void getDetectedStatus();
     void setInterrupt(interruptFun interruptFunction, bool attach);
 };
 

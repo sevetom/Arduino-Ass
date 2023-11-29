@@ -1,13 +1,13 @@
 #include "ExitingHandler.h"
 
-void ExitingHandler::initTasks(ChangeFun f) {
-  this->lcd = new LcdTask("Washing complete, \n you can leave the area");
+void ExitingHandler::initTasks() {
+  this->lcd = new LcdTask(this->hw->lcd, "Washing complete, \n you can leave the area");
   this->lcd->init(150);
-  this->greenLed = new LedTask(EXT_GREEN_LED_PIN, ON);
+  this->greenLed = new LedTask(this->hw->green3, ON);
   this->greenLed->init(150);
-  this->redLed = new LedTask(EXT_RED_LED_PIN, OFF);
+  this->redLed = new LedTask(this->hw->red2, OFF);
   this->redLed->init(150);
-  this->sonar = new SonarTask(EXT_SONAR_TRIG_PIN, EXT_SONAR_ECHO_PIN, f, MAX);
+  this->sonar = new SonarTask(this->hw->sonar,this->changeFun, MAX);
   this->sonar->init(150);
   this->tasksHandled[0] = lcd;
   this->tasksHandled[1] = greenLed;

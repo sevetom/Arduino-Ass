@@ -1,15 +1,13 @@
 #include "LcdTask.h"
 
-LcdTask::LcdTask(const char* message) {
-  this->lcd = new LcdDisplay();
-  this->lcd->init();
+LcdTask::LcdTask(LcdDisplay* lcd, const char* message) {
+  this->lcd = lcd;
   this->message = message;
   this->mode = PRINT;
 }
 
-LcdTask::LcdTask(const char* message, CountDown* timer) {
-  this->lcd = new LcdDisplay();
-  this->lcd->init();
+LcdTask::LcdTask(LcdDisplay* lcd, const char* message, CountDown* timer) {
+  this->lcd = lcd;
   this->lcd->printLong(message);
   this->message = message;
   this->timer = timer;
@@ -31,7 +29,7 @@ void LcdTask::tick() {
     case LOADING_BAR:
       if (this->timer->getTime() >= this->percentage*1000) {
         this->percentage++;
-        this->lcd->print("#", this->percentage, 1);
+        this->lcd->printText("#", this->percentage, 1);
       }
       break;
   }

@@ -18,8 +18,8 @@ private:
   LcdMode mode;
   int percentage;
 public:
-  LcdTask(const char* message);
-  LcdTask(const char* message, CountDown* timer);
+  LcdTask(LcdDisplay* lcd, const char* message);
+  LcdTask(LcdDisplay* lcd, const char* message, CountDown* timer);
   void init(int period);
   void tick();
 };

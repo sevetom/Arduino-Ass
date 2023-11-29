@@ -3,10 +3,10 @@
 
 #include <Arduino.h>
 
-class Temperature{
+class TempSensor {
     int pin;
 public:
-    Temperature(int pin);
+    TempSensor(int pin);
     float getTemperature();
 };
 

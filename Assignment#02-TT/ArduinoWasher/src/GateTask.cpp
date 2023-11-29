@@ -1,7 +1,7 @@
 #include "GateTask.h"
 
-GateTask::GateTask(int pin, gateMode mode) {
-  this->gate = new Gate(pin);
+GateTask::GateTask(Gate* gate, gateMode mode) {
+  this->gate = gate;
   this->mode = mode;
   this->cycles = 0;
 }
@@ -29,6 +29,6 @@ void GateTask::tick() {
   if (this->cycles >= GATE_CYCLES) {
     this->cycles = -1;
     this->gate->stop();
-    //this->gate->off();
+    this->gate->off();
   }
 }

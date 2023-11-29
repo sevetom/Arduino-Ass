@@ -1,16 +1,13 @@
 #include "SleepHandler.h"
 
-void SleepHandler::initTasks(ChangeFun f){
-  TaskHandler::changeFun = f;
-  this->pir = new Pir(PIR_PIN);
-  this->pir->init();
+void SleepHandler::initTasks(){
   this->sleep = new SleepTask();
   this->sleep->init(150);
   this->tasksHandled[0] = sleep;
 }
 
 void SleepHandler::setChangeState(bool state) {
-  this->pir->setInterrupt(TaskHandler::changeFun, state);
+  this->hw->pir->setInterrupt(this->changeFun, state);
 }
 
 int SleepHandler::getTasksCount() {
