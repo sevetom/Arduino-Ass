@@ -9,10 +9,10 @@ void SleepTask::init(int period) {
 
 void SleepTask::tick() {
   Serial.println("Going to sleep...");
+  Serial.flush();
   sleep_enable();
   sleep_mode();
   // sleeping...
   sleep_disable();
-  Serial.flush();
   Serial.println("Waking up!");
 }

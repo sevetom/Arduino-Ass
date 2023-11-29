@@ -28,8 +28,11 @@ void StateHandlerTask::changeTasks() {
   if (this->currentHandler != -1) {
     this->taskHandlers[currentHandler]->setChangeState(false);
   }
-  this->currentHandler = this->currentHandler >= this->handlerCount ? 0 : this->currentHandler+1;
+  this->currentHandler = this->currentHandler >= this->handlerCount-4 ? 0 : this->currentHandler+1;
   this->taskHandlers[currentHandler]->setChangeState(true);
+  if (this->currentHandler == 0) {
+    this->sched->resetWindow();
+  }
   this->sched->shiftTasks(this->taskHandlers[currentHandler]->getTasksCount());
   Serial.println("Tasks changed!");
 }

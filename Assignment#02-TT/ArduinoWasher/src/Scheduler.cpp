@@ -32,6 +32,11 @@ void Scheduler::shiftTasks(int shift){
   this->startWindow = this->endWindow;
   this->endWindow += shift;
 }
+
+void Scheduler::resetWindow(){
+  this->startWindow = 1;
+  this->endWindow = 1;
+}
   
 void Scheduler::schedule(){   
   while (!timerFlag){}

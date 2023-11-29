@@ -17,6 +17,7 @@ public:
   void init(long basePeriod);  
   bool addTask(Task* task);  
   void shiftTasks(int shift);
+  void resetWindow();
   void schedule();
   void printTasks();
 };
