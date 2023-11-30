@@ -5,6 +5,7 @@ LcdTask::LcdTask(LcdDisplay* lcd, const char* message) {
   this->message = message;
   this->mode = PRINT;
   this->printStatus = false;
+  this->percentage = 0;
 }
 
 LcdTask::LcdTask(LcdDisplay* lcd, const char* message, CountDown* timer) {
