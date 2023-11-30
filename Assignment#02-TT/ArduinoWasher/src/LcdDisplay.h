@@ -13,13 +13,11 @@
 */
 class LcdDisplay{
     LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, MAX_LENGTH, MAX_LINES);
-    bool printed;
 public:
     LcdDisplay();
     void printLong(const char* text);
-    void printText(const char* text, int line, int row);
+    void printText(const char* text, int row, int line);
     void clear();
-    bool getPrintStatus();
 };
 
 #endif

@@ -51,6 +51,7 @@ void setup() {
     taskHandlers[i]->setHandler([](){ stateHandlerTask->changeState(); }, hw);
     taskHandlers[i]->initTasks();
     insertTasks(taskHandlers[i]->getTasks());
+    Serial.println("Tasks inserted: " + String(i));
   }
   stateHandlerTask->changeTasks();
 }
