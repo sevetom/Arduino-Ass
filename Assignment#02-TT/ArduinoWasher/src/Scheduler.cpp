@@ -34,6 +34,9 @@ void Scheduler::shiftTasks(int shift){
 }
 
 void Scheduler::resetWindow(){
+  for (int i = 0; i < this->nTasks; i++){
+    this->taskList[i]->restart();
+  }
   this->startWindow = 1;
   this->endWindow = 1;
 }

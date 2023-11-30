@@ -1,7 +1,7 @@
 #ifndef __GATE_TASK__
 #define __GATE_TASK__
 
-#define GATE_CYCLES 15
+#define GATE_CYCLES 10
 
 #include "Task.h"
 #include "Gate.h"
@@ -20,5 +20,6 @@ public:
   GateTask(Gate* gate, gateMode mode);
   void init(int period);
   void tick();
+  void restart();
 };
 #endif

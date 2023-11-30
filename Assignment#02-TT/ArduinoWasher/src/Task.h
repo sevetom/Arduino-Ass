@@ -23,7 +23,10 @@ public:
       return false; 
     }
   }
-  
+
+  virtual void restart() {
+    timeElapsed = 0;
+  }
 };
 
 #endif

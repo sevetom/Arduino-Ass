@@ -24,11 +24,16 @@ void GateTask::tick() {
         break;
     }
   }
-  this->cycles = this->cycles != -1 ? this->cycles + 1 : 0;
+  this->cycles += this->cycles != -1 ? 1 : 0;
   Serial.println("cycles2: " + String(this->cycles));
   if (this->cycles >= GATE_CYCLES) {
     this->cycles = -1;
     this->gate->stop();
     this->gate->off();
   }
+}
+
+void GateTask::restart() {
+  this->timeElapsed = 0;
+  this->cycles = 0;
 }
