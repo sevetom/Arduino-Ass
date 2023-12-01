@@ -5,8 +5,9 @@
 #include "LedTask.h"
 #include "LcdTask.h"
 #include "CountDown.h"
+#include "TempTask.h"
 
-#define WASH_TASKS_COUNT 3
+#define WASH_TASKS_COUNT 4
 #define WASH_TIME 16*1000
 
 class WashingHandler : public TaskHandler{
@@ -14,6 +15,7 @@ private:
   LedTask *led;
   LcdTask* lcd;
   CountDown* timer;
+  TempTask* tempSensor;
 public:
   void initTasks();
   void setChangeState(bool state);

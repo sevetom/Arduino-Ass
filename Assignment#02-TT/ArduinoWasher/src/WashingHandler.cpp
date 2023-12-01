@@ -7,9 +7,12 @@ void WashingHandler::initTasks(){
     timer->init(150);
     lcd = new LcdTask(this->hw->lcd, "Washing:", timer);
     lcd->init(150);
+    tempSensor = new TempTask(this->hw->tempSensor);
+    tempSensor->init(150);
     this->tasksHandled[0] = led;
     this->tasksHandled[1] = lcd;
     this->tasksHandled[2] = timer;
+    this->tasksHandled[3] = tempSensor;
 }
 
 void WashingHandler::setChangeState(bool state){
