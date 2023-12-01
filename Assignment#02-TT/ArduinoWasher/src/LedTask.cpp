@@ -10,6 +10,7 @@ void LedTask::init(int period) {
 }
 
 void LedTask::tick() {
+  Serial.println("LedTask " + String(this->led->isOn()));
   switch (this->mode) {
     case ON:
       if (!this->led->isOn()) {
@@ -29,4 +30,5 @@ void LedTask::tick() {
       }
       break;
   }
+  Serial.println("LedTask end");
 }

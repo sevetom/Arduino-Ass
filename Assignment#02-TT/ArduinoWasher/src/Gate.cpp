@@ -19,7 +19,7 @@ void Gate::open() {
 
 void Gate::close() {
   this->servo.write(100);
-  delay(101);
+  delay(105);
 }
 
 void Gate::stop() {

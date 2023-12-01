@@ -4,6 +4,7 @@ CountDown::CountDown(long time, InterruptFun f) {
   this->waitTime = time;
   this->interruptFunction = f;
   this->currentTime = 0;
+  this->isRunning = false;
 }
 
 void CountDown::init(int period) {

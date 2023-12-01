@@ -22,24 +22,14 @@ void LcdTask::init(int period) {
 }
 
 void LcdTask::tick() {
-  switch (this->mode) {
-    case PRINT:
-      if (!this->printStatus) {
-        this->lcd->clear();
-        this->lcd->printLong(this->message);
-        this->printStatus = true;
-      }
-      break;
-    case LOADING_BAR:
-      if (this->timer->getTime() >= this->percentage*1000) {
-        this->percentage++;
-        this->lcd->printText("#", 1, this->percentage);
-      }
-      if (this->percentage == FULL_BAR) {
-        this->timer->reset();
-        this->percentage = 0;
-      }
-      break;
+  if (!this->printStatus) {
+    this->lcd->clear();
+    this->lcd->printLong(this->message);
+    this->printStatus = true;
+  }
+  if (this->mode == LOADING_BAR && this->timer->getTime() >= this->percentage*1000) {
+    this->lcd->printText("#", this->percentage, 1);
+    this->percentage++;
   }
 }
 
@@ -48,4 +38,7 @@ void LcdTask::restart() {
   this->percentage = 0;
   this->printStatus = false;
   this->lcd->clear();
+  if (this->mode == LOADING_BAR) {
+    this->timer->reset();
+  }
 }

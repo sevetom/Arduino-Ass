@@ -1,6 +1,7 @@
 #ifndef __TASK__
 #define __TASK__
 
+#include <Arduino.h>
 class Task {
 protected:
   long myPeriod;

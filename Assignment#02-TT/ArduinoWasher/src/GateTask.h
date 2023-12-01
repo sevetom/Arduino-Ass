@@ -1,7 +1,8 @@
 #ifndef __GATE_TASK__
 #define __GATE_TASK__
 
-#define GATE_CYCLES 6
+#define OPEN_CYCLES 6
+#define CLOSE_CYCLES 11
 
 #include "Task.h"
 #include "Gate.h"

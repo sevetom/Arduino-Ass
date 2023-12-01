@@ -7,7 +7,7 @@
 #include "CountDown.h"
 
 #define WASH_TASKS_COUNT 3
-#define WASH_TIME 16
+#define WASH_TIME 16*1000
 
 class WashingHandler : public TaskHandler{
 private:

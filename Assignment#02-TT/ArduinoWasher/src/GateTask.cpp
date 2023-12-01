@@ -11,6 +11,7 @@ void GateTask::init(int period) {
 }
 
 void GateTask::tick() {
+  Serial.println("GateTask");
   if (this->cycles == 0) {
     this->gate->on();
     switch (this->mode) {
@@ -23,11 +24,12 @@ void GateTask::tick() {
     }
   }
   this->cycles += this->cycles != -1 ? 1 : 0;
-  if (this->cycles >= GATE_CYCLES) {
+  if (this->cycles >= (this->mode == OPEN ? OPEN_CYCLES : CLOSE_CYCLES)) {
     this->cycles = -1;
     this->gate->stop();
     this->gate->off();
   }
+  Serial.println("GateTask end " + String(this->cycles));
 }
 
 void GateTask::restart() {

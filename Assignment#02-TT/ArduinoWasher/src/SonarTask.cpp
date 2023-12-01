@@ -15,9 +15,13 @@ void SonarTask::init(int period){
 void SonarTask::tick(){
   if (this->reading) {
     long time = this->mode == MAX ? N4 : N2;
+    float distance = this->sonar->getDistance();
+    delay(100);
+    Serial.println("Distance sonar: ");
+    delay(100);
     if(this->mode == MAX ? 
-      this->sonar->getDistance() < MIN_DIST : 
-      this->sonar->getDistance() > MAX_DIST) {
+      distance > MAX_DIST : 
+      distance < MIN_DIST) {
       if (this->minimumTime >= time) {
         this->setReading(false);
         this->minimumTime = 0;
@@ -25,6 +29,8 @@ void SonarTask::tick(){
       } else {
         this->minimumTime += this->myPeriod + this->timeElapsed;
       } 
+    } else {
+      this->minimumTime = 0;
     }
   }
 }

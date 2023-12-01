@@ -7,7 +7,7 @@ Button::Button(int pin){
 
 void Button::setInterrupt(InterruptFunction intFun, bool attach){
     if(attach){
-        attachInterrupt(digitalPinToInterrupt(pin), intFun, CHANGE);
+        attachInterrupt(digitalPinToInterrupt(pin), intFun, RISING);
     }else{
         detachInterrupt(digitalPinToInterrupt(pin));
     }

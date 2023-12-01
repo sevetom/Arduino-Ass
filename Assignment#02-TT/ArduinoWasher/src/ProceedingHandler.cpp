@@ -17,6 +17,7 @@ void ProceedingHandler::initTasks() {
 
 void ProceedingHandler::setChangeState(bool state) {
   this->sonar->setReading(state);
+  Serial.println("ProceedingHandler Change State: " + String(state));
 }
 
 int ProceedingHandler::getTasksCount() {

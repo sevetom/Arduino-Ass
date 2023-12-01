@@ -7,8 +7,7 @@ void SleepHandler::initTasks(){
 }
 
 void SleepHandler::setChangeState(bool state) {
-  //this->hw->pir->setInterrupt(this->changeFun, state);
-  this->hw->button->setInterrupt(this->changeFun, state);
+  this->hw->pir->setInterrupt(this->changeFun, state);
 }
 
 int SleepHandler::getTasksCount() {
