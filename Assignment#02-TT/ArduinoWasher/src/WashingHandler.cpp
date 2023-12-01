@@ -10,7 +10,6 @@ void WashingHandler::initTasks(){
     this->tasksHandled[0] = led;
     this->tasksHandled[1] = lcd;
     this->tasksHandled[2] = timer;
-    Serial.println("WashingHandler tasks initialized");
 }
 
 void WashingHandler::setChangeState(bool state){

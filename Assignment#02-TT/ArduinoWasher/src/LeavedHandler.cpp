@@ -1,6 +1,8 @@
 #include "LeavedHandler.h"
 
 void LeavedHandler::initTasks() {
+  Serial.println("LeavedHandler tasks...");
+  delay(100);
   this->led1 = new LedTask(this->hw->green1, OFF);
   this->led1->init(150);
   this->led3 = new LedTask(this->hw->green3, OFF);
@@ -13,6 +15,8 @@ void LeavedHandler::initTasks() {
   this->tasksHandled[1] = led3;
   this->tasksHandled[2] = gate;
   this->tasksHandled[3] = timer;
+  Serial.println("LeavedHandler tasks initialized!");
+  delay(1000);
 }
 
 void LeavedHandler::setChangeState(bool state) {

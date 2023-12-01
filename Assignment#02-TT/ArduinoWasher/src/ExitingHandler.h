@@ -5,8 +5,9 @@
 #include "LcdTask.h"
 #include "LedTask.h"
 #include "SonarTask.h"
+#include "GateTask.h"
 
-#define EXT_TASKS_COUNT 4
+#define EXT_TASKS_COUNT 5
 
 class ExitingHandler : public TaskHandler {
 private:
@@ -14,6 +15,7 @@ private:
   LedTask* greenLed;
   LedTask* redLed;
   SonarTask* sonar;
+  GateTask* gate;
 public:
   void initTasks();
   void setChangeState(bool state);

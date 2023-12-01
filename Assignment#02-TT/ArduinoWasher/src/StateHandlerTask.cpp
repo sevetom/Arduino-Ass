@@ -30,7 +30,9 @@ void StateHandlerTask::changeTasks() {
   if (this->currentHandler != -1) {
     this->taskHandlers[currentHandler]->setChangeState(false);
   }
-  if (this->currentHandler >= this->handlerCount-2) {
+  if (this->currentHandler >= this->handlerCount-4) {
+    Serial.println("Resetting tasks...");
+    delay(100);
     this->currentHandler = 0;
     this->sched->resetWindow();
   } else {

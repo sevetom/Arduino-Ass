@@ -16,9 +16,6 @@ void SonarTask::tick(){
   if (this->reading) {
     long time = this->mode == MAX ? N4 : N2;
     float distance = this->sonar->getDistance();
-    delay(100);
-    Serial.println("Distance sonar: ");
-    delay(100);
     if(this->mode == MAX ? 
       distance > MAX_DIST : 
       distance < MIN_DIST) {

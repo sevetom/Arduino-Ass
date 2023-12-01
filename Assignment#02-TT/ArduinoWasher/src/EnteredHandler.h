@@ -14,7 +14,6 @@ private:
   LcdTask* lcd;
   LedTask* led;
   GateTask* gate;
-  Button* button;
 public:
   void initTasks();
   void setChangeState(bool state);

@@ -12,13 +12,18 @@ void CountDown::init(int period) {
 }
 
 void CountDown::tick() {
+  Serial.println("Timer tick");
+  delay(100);
   if (this->isRunning) {
     this->currentTime += this->myPeriod + this->timeElapsed;
     if (this->currentTime >= this->waitTime) {
+      Serial.println("Timer tick interrupt ENTROOOOOO");
       this->reset();
       this->interruptFunction();
     }
   }
+  Serial.println("Timer tick end " + String(this->currentTime));
+  delay(100);
 }
 
 void CountDown::start() {
@@ -32,4 +37,9 @@ void CountDown::reset() {
 
 long CountDown::getTime() {
   return this->currentTime;
+}
+
+void CountDown::restart() {
+  this->timeElapsed = 0;
+  this->reset();
 }

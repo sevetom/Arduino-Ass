@@ -7,13 +7,13 @@
 #include "CountDown.h"
 
 #define LEAVED_TASKS_COUNT 4
-#define N5 2
+#define N5 5*1000
 
 class LeavedHandler : public TaskHandler {
 private:
   LedTask* led1;
   LedTask* led3;
-  GateTask* gate;
+  GateTask* gate; //13 (con -3)
   CountDown* timer;
 public:
   void initTasks();

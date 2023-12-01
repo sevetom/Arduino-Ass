@@ -37,7 +37,6 @@ void LcdTask::restart() {
   this->timeElapsed = 0;
   this->percentage = 0;
   this->printStatus = false;
-  this->lcd->clear();
   if (this->mode == LOADING_BAR) {
     this->timer->reset();
   }

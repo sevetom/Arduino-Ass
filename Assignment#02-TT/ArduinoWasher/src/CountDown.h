@@ -18,6 +18,7 @@ public:
   void start();
   void reset();
   long getTime();
+  void restart();
 };
 
 #endif
