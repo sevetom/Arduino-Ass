@@ -7,14 +7,15 @@
 
 class Scheduler {
   
-  long basePeriod;
+  unsigned long basePeriod;
   int nTasks;
   int startWindow;
   int endWindow;
   Task* taskList[MAX_TASKS];
+  unsigned long lastLoopTime;
 
 public:
-  void init(long basePeriod);  
+  void init(unsigned long basePeriod);  
   bool addTask(Task* task);  
   void shiftTasks(int shift);
   void resetWindow();
