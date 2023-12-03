@@ -11,9 +11,9 @@
 
 class WelcomeHandler : public TaskHandler {
 private:
-  LedTask* led;
-  LcdTask* lcd;
-  CountDown* timer;
+  LedTask* led; // 2
+  LcdTask* lcd; // 3
+  CountDown* timer; // 4
 public:
   void initTasks();
   void setChangeState(bool state);
