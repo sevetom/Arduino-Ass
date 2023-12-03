@@ -43,17 +43,14 @@ class Controller:
                     continue
                 if packetDecoded.startswith("Packet: Temperature: "):
                     self.temperature = float(packetDecoded.split(" ")[2])
-                    if self.temperature > 55:
+                    if self.temperature >= 50.0:
                         self.status = "ERROR"
                     else:
                         self.status = "OK"
                 elif packetDecoded.startswith("Packet: Car Washed: "):
-                    self.car_washed()
-                else:
-                    print("Invalid Packet")
+                    self.car_washed += 1
                 self.view.set_data(self.car_washed, self.status, self.temperature)
-    
+
     def send_satatus(self):
         self.serialInst.write(f"Packet: Status: {self.status}\n".encode())
         print(f"Packet: Status: {self.status} SEND")
-    

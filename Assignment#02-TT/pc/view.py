@@ -66,9 +66,7 @@ class View:
             self.label_status.config(fg="white", bg="gray")
             
     def on_click(self):
-        print("cambia stato")
-        self.status = "OK" if self.status is "ERROR" else "ERROR"
-        print(f"View status: {self.status}")
+        self.status = "OK"
         self.update_labels()
 
     def run(self):
