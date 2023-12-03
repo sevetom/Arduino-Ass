@@ -7,13 +7,15 @@ void timerHandler(void){
   timerFlag = true;
 }
 
-void Scheduler::init(unsigned long basePeriod){
+void Scheduler::init(long basePeriod){
   this->basePeriod = basePeriod;
   timerFlag = false;
+  long period = 1000l*basePeriod;
+  Timer1.initialize(period);
+  Timer1.attachInterrupt(timerHandler);
   this->nTasks = 0;
   this->startWindow = 1;
   this->endWindow = 1;
-  this->lastLoopTime = 0;
 }
 
 bool Scheduler::addTask(Task* task){
@@ -39,9 +41,9 @@ void Scheduler::resetWindow(){
   this->endWindow = 1;
 }
   
-void Scheduler::schedule(){
-  while (millis() - this->lastLoopTime <= this->basePeriod){}
-  this->lastLoopTime = millis();
+void Scheduler::schedule(){   
+  while (!timerFlag){}
+  Timer1.setPeriod(this->basePeriod*1000l);
   timerFlag = false;
   if (this->taskList[0]->updateAndCheckTime(this->basePeriod)) {
     this->taskList[0]->tick();
