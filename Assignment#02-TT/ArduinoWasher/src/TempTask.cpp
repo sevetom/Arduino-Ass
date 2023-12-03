@@ -11,6 +11,6 @@ void TempTask::init(int period){
 
 void TempTask::tick(){
     this->temp = this->tempSensor->getTemperature();
-    Serial.println("Temp: " + String(this->temp));
+    Serial.println("Packet: Temperature: " + String(this->temp));
 }
 

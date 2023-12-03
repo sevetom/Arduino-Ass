@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define CALIBRATION_TIME_SEC 10
+#define CALIBRATION_TIME_SEC 3 //! TO CHANGE
 
 class Pir {
     using interruptFun = void (*)(void);

@@ -1,11 +1,13 @@
 import serial.tools.list_ports
-import model as md
 class Controller:
-    def __init__(self):
+    def __init__(self, view):
         self.serialInst = serial.Serial()
         self.portsList = []
         self.portVar = None
-        self.model = md.Model()
+        self.status = "OK"
+        self.temperature = 0
+        self.car_washed = 0
+        self.view = view
 
     def select_port(self):
         ports = serial.tools.list_ports.comports()
@@ -29,17 +31,29 @@ class Controller:
 
     def read_serial(self):
         while True:
+            if self.view.status == "ERROR":
+                if self.view.status != self.status:
+                    self.status = self.view.status
+                    self.send_satatus()
+                continue
             if self.serialInst.in_waiting:
                 packet = self.serialInst.readline()
-                print(packet.decode('utf').rstrip('\n'))
-                data = packet.decode('utf').rstrip('\n').split("|")
-                # 1: car_washed - 2: status - 3: temperature
-                if len(data) == 3:
-                    self.model.set_car_washed(data[0])
-                    self.model.set_status(data[1])
-                    self.model.set_temperature(data[2])
+                packetDecoded = packet.decode('utf').rstrip("\n")
+                if not packetDecoded or not packetDecoded.startswith("Packet: "):
+                    continue
+                if packetDecoded.startswith("Packet: Temperature: "):
+                    self.temperature = float(packetDecoded.split(" ")[2])
+                    if self.temperature > 55:
+                        self.status = "ERROR"
+                    else:
+                        self.status = "OK"
+                elif packetDecoded.startswith("Packet: Car Washed: "):
+                    self.car_washed()
                 else:
                     print("Invalid Packet")
-                
-      
+                self.view.set_data(self.car_washed, self.status, self.temperature)
+    
+    def send_satatus(self):
+        self.serialInst.write(f"Packet: Status: {self.status}\n".encode())
+        print(f"Packet: Status: {self.status} SEND")
     
