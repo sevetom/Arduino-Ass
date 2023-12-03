@@ -49,18 +49,10 @@ void Scheduler::schedule(){
     this->taskList[0]->tick();
   }
   for (int i = this->startWindow; i < this->endWindow; i++){
-    //Serial.println("Controllo task: " + String(i));
     if (this->taskList[i]->updateAndCheckTime(this->basePeriod)){
-      Serial.println("Task: " + String(i));
+      Serial.println("Tasks: " + String(i));
       this->taskList[i]->tick();
-      //Serial.println("Task: " + String(i) + " end");
       delay(1);
     }
-  }
-}
-
-void Scheduler::printTasks(){
-  for (int i = 0; i < this->nTasks; i++){
-    Serial.println("Task: " + String(i));
   }
 }

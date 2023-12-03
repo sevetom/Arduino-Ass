@@ -3,7 +3,7 @@
 
 #include "Task.h"
 
-#define MAX_TASKS 50
+#define MAX_TASKS 25
 
 class Scheduler {
   
@@ -19,7 +19,6 @@ public:
   void shiftTasks(int shift);
   void resetWindow();
   void schedule();
-  void printTasks();
 };
 
 #endif

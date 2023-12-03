@@ -1,6 +1,6 @@
 #ifndef __TASK_HANDLER__
 #define __TASK_HANDLER__
-#define MAX_HANDLER_TASKS 10
+#define MAX_HANDLER_TASKS 5
 
 #include "Task.h"
 #include <stdio.h>

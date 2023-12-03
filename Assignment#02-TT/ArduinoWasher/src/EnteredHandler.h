@@ -11,9 +11,9 @@
 
 class EnteredHandler : public TaskHandler {
 private:
-  LcdTask* lcd;
-  LedTask* led;
-  GateTask* gate;
+  LcdTask* lcd; // 9
+  LedTask* led; // 10
+  GateTask* gate; // 11
 public:
   void initTasks();
   void setChangeState(bool state);

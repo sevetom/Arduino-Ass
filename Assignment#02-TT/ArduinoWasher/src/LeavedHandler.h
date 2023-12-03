@@ -11,10 +11,10 @@
 
 class LeavedHandler : public TaskHandler {
 private:
-  LedTask* led1;
-  LedTask* led3;
-  GateTask* gate; //13 (con -3)
-  CountDown* timer;
+  LedTask* led1; // 21
+  LedTask* led3; // 22
+  GateTask* gate; // 23
+  CountDown* timer; // 24
 public:
   void initTasks();
   void setChangeState(bool state);

@@ -1,7 +1,6 @@
 #include "ExitingHandler.h"
 
 void ExitingHandler::initTasks() {
-  Serial.println("Initializing ExitingHandler tasks...");
   this->lcd = new LcdTask(this->hw->lcd, "Washing complete, \n you can leave the area");
   this->lcd->init(150);
   this->greenLed = new LedTask(this->hw->green3, ON);
@@ -17,7 +16,6 @@ void ExitingHandler::initTasks() {
   this->tasksHandled[2] = redLed;
   this->tasksHandled[3] = sonar;
   this->tasksHandled[4] = gate;
-  Serial.println("ExitingHandler tasks initialized!");
 }
 
 void ExitingHandler::setChangeState(bool state) {

@@ -10,7 +10,6 @@ void SleepTask::tick() {
   Serial.flush();
   sleep_enable();
   sleep_mode();
-  // sleeping...
+
   sleep_disable();
-  Serial.println("Waking up!");
 }

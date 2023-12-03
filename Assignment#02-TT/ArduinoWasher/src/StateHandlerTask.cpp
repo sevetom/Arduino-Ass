@@ -18,29 +18,22 @@ void StateHandlerTask::init(int period) {
 
 void StateHandlerTask::tick() {
   if (this->change == true) {
-
     this->change = false;
     this->changeTasks();
   }
 }
 
 void StateHandlerTask::changeTasks() {
-  //noInterrupts();
-  Serial.println("Changing tasks...");
+  Serial.println("Change state " + String(this->currentHandler) + " to " + String(this->currentHandler + 1));
   if (this->currentHandler != -1) {
     this->taskHandlers[currentHandler]->setChangeState(false);
   }
-  if (this->currentHandler >= this->handlerCount-4) {
-    Serial.println("Resetting tasks...");
-    delay(100);
+  this->currentHandler++;
+  if (this->currentHandler >= this->handlerCount) {
     this->currentHandler = 0;
     this->sched->resetWindow();
-  } else {
-    this->currentHandler++;
   }
   this->taskHandlers[currentHandler]->setChangeState(true);
   this->sched->shiftTasks(this->taskHandlers[currentHandler]->getTasksCount());
-  Serial.println("Tasks changed!");
-  //interrupts();
 }
 

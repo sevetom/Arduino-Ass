@@ -12,10 +12,10 @@
 
 class WashingHandler : public TaskHandler{
 private:
-  LedTask *led;
-  LcdTask* lcd;
-  CountDown* timer;
-  TempTask* tempSensor;
+  LedTask *led; // 12
+  LcdTask* lcd; // 13
+  CountDown* timer; // 14
+  TempTask* tempSensor; // 15
 public:
   void initTasks();
   void setChangeState(bool state);

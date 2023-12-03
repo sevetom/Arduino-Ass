@@ -2,6 +2,7 @@
 
 TempTask::TempTask(TempSensor* tempSensor){
     this->tempSensor = tempSensor;
+    this->temp = 0;
 }
 
 void TempTask::init(int period){
