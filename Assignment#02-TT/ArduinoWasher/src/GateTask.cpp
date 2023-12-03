@@ -11,6 +11,7 @@ void GateTask::init(int period) {
 }
 
 void GateTask::tick() {
+  Serial.println("Gate tick");
   delay(10);
   if (this->cycles == 0) {
     this->gate->on();

@@ -11,11 +11,11 @@
 
 class ExitingHandler : public TaskHandler {
 private:
-  LcdTask* lcd; // 16
-  LedTask* greenLed; // 17
-  LedTask* redLed; // 18
-  SonarTask* sonar; // 19
-  GateTask* gate; // 20
+  LcdTask* lcd;
+  LedTask* greenLed;
+  LedTask* redLed;
+  SonarTask* sonar;
+  GateTask* gate;
 public:
   void initTasks();
   void setChangeState(bool state);

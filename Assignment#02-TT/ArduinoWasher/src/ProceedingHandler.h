@@ -11,10 +11,10 @@
 
 class ProceedingHandler : public TaskHandler{
 private:
-  LcdTask* lcd; // 5
-  LedTask* led; // 6
-  GateTask* gate; // 7
-  SonarTask* sonar; // 8
+  LcdTask* lcd;
+  LedTask* led;
+  GateTask* gate;
+  SonarTask* sonar;
 public:
   void initTasks();
   void setChangeState(bool state);

@@ -9,7 +9,7 @@
 
 class SleepHandler : public TaskHandler {
 private:
-  SleepTask* sleep; // 1
+  SleepTask* sleep;
 public:
   void initTasks();
   void setChangeState(bool state);

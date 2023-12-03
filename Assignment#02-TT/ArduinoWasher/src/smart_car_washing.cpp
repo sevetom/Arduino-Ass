@@ -39,17 +39,19 @@ void setup() {
   stateHandlerTask = new StateHandlerTask(sched, taskHandlers, TASK_HANDLERS);
   stateHandlerTask->init(150);
   sched->addTask(stateHandlerTask);
-  taskHandlers[SLEEPING] = new SleepHandler();
-  //taskHandlers[WELCOME] = new WelcomeHandler();
-  //taskHandlers[PROCEEDING] = new ProceedingHandler();
-  //taskHandlers[ENTERED] = new EnteredHandler();
-  //taskHandlers[WASHING] = new WashingHandler();
-  //taskHandlers[EXITING] = new ExitingHandler();
-  taskHandlers[LEAVED-5] = new LeavedHandler();
-  for (int i = 0; i < TASK_HANDLERS-5; i++){
+  //taskHandlers[SLEEPING] = new SleepHandler();
+  //taskHandlers[WELCOME-1] = new WelcomeHandler();
+  //taskHandlers[PROCEEDING-2] = new ProceedingHandler();
+  //taskHandlers[ENTERED-3] = new EnteredHandler();
+  taskHandlers[WASHING-4] = new WashingHandler();
+  taskHandlers[EXITING-4] = new ExitingHandler();
+  taskHandlers[LEAVED-4] = new LeavedHandler();
+  for (int i = 0; i < TASK_HANDLERS-4; i++){
+    Serial.println("Inserting tasks: " + String(i));
     taskHandlers[i]->setHandler([](){ stateHandlerTask->changeState(); }, hw);
     taskHandlers[i]->initTasks();
     insertTasks(taskHandlers[i]->getTasks());
+    Serial.println("Tasks inserted: " + String(i));
     delay(100);
   }
   stateHandlerTask->changeTasks();

@@ -1,6 +1,7 @@
 #include "ProceedingHandler.h"
 
 void ProceedingHandler::initTasks() {
+  Serial.println("ProceedingHandler tasks...");
   this->lcd = new LcdTask(this->hw->lcd, "Proceed to the \n Washing Area");
   this->lcd->init(150);
   this->led = new LedTask(this->hw->green1, BLINK);
@@ -13,10 +14,12 @@ void ProceedingHandler::initTasks() {
   this->tasksHandled[1] = led;
   this->tasksHandled[2] = gate;
   this->tasksHandled[3] = sonar;
+  Serial.println("ProceedingHandler tasks initialized!");
 }
 
 void ProceedingHandler::setChangeState(bool state) {
   this->sonar->setReading(state);
+  Serial.println("ProceedingHandler Change State: " + String(state));
 }
 
 int ProceedingHandler::getTasksCount() {
