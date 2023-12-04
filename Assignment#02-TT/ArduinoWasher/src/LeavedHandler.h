@@ -7,7 +7,6 @@
 #include "CountDown.h"
 
 #define LEAVED_TASKS_COUNT 3
-#define N5 5*1000
 
 class LeavedHandler : public TaskHandler {
 private:
