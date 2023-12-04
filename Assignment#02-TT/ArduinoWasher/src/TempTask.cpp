@@ -13,7 +13,7 @@ void TempTask::init(int period){
 void TempTask::tick(){
     this->temp = this->tempSensor->getTemperature();
     Serial.println("Packet: Temperature: " + String(this->temp));
-    if (this->temp > 100) { //! TO CHANGE
+    if (this->temp > TEMP_THRESHOLD) {
         this->isError = true;
         Serial.println("Packet: Error: " + String(this->isError));
         do {

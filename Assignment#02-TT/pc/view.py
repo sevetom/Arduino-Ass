@@ -35,9 +35,6 @@ class View:
         print(f"Car Washed: {self.car_washed} Status: {self.status} Temperature: {self.temperature}")
         self.update_labels()
         
-    def exiting(self):
-        exit(0)
-        
     def configure_main_window(self):
         screen_width = self.root.winfo_screenwidth() * 2 // 9
         screen_height = self.root.winfo_screenheight() * 2 // 9
@@ -45,7 +42,7 @@ class View:
         y_position = int(screen_height + screen_height * 0.75)
         self.root.geometry(f"{screen_width}x{screen_height}+{x_position}+{y_position}")
         self.root.resizable(False, False)
-        self.root.protocol("WM_DELETE_WINDOW", self.exiting)
+        self.root.protocol("WM_DELETE_WINDOW", exit)
     
     def update_labels(self):
         self.label_car.config(text="Car Washed\n"+str(self.car_washed))
