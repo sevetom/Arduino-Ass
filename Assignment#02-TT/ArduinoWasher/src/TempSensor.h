@@ -3,11 +3,22 @@
 
 #include <Arduino.h>
 
+/**
+ * Class that handles the temperature sensor
+*/
 class TempSensor {
-    int pin;
+  int pin;
 public:
-    TempSensor(int pin);
-    float getTemperature();
+  /**
+   * Initialize the temperature sensor
+   * @param pin The pin to use
+  */
+  TempSensor(int pin);
+  /**
+   * Get the temperature
+   * @return The temperature
+  */
+  float getTemperature();
 };
 
 #endif

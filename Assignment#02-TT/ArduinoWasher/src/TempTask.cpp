@@ -1,12 +1,12 @@
 #include "TempTask.h"
 
-TempTask::TempTask(TempSensor* tempSensor, LcdDisplay* lcdDisplay, LcdTask* lcdTask) {
+TempTask::TempTask(TempSensor* tempSensor, LcdTask* lcdTask) {
     this->tempSensor = tempSensor;
-    this->lcd = lcdDisplay;
+    this->lcd = lcdTask->getLcd();
     this->lcdTask = lcdTask;
     this->temp = 0;
     this->isError = false;
-    this->minimumTime = 0;
+    this->tresholdTime = 0;
 }
 
 void TempTask::init(int period){
@@ -14,16 +14,22 @@ void TempTask::init(int period){
 }
 
 void TempTask::tick(){
+  /**
+   * First sends the temperature to the serial monitor
+  */
   this->temp = this->tempSensor->getTemperature();
-  Serial.println("Packet: Temperature: " + String(this->temp) + " minimumTime: " + String(this->minimumTime));
+  Serial.println("Packet: Temperature: " + String(this->temp));
+  /**
+   * If the temperature is too high for too long sets the error state
+  */
   if (this->temp > TEMP_THRESHOLD || this->temp == 0) {
-    if (this->minimumTime >= N5) {
+    if (this->tresholdTime >= N5) {
         this->setError();
       } else {
-        this->minimumTime += this->myPeriod + this->timeElapsed;
+        this->tresholdTime += this->myPeriod + this->timeElapsed;
       } 
   } else {
-    this->minimumTime = 0;
+    this->tresholdTime = 0;
   }
 }
 
@@ -32,11 +38,14 @@ void TempTask::setError() {
   this->lcd->printLong("Detected a Problem \n - Please Wait");
   this->isError = true;
   Serial.println("Packet: Error: " + String(this->isError));
+  /**
+   * Waits for the error to be resolved
+  */
   do {
       this->checkResolution();
   } while (this->isError);
   this->lcdTask->restart();
-  this->minimumTime = 0;
+  this->tresholdTime = 0;
 }
 
 void TempTask::checkResolution() {

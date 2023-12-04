@@ -12,6 +12,10 @@ void CountDown::init(int period) {
 }
 
 void CountDown::tick() {
+  /**
+   * Adds the time elapsed since the last tick to the current time
+   * and calls the interrupt function if the time is up
+  */
   if (this->isRunning) {
     this->currentTime += this->myPeriod + this->timeElapsed;
     if (this->currentTime >= this->waitTime) {

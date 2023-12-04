@@ -9,6 +9,9 @@
 
 #define PROCEEDING_TASKS_COUNT 4
 
+/**
+ * Task handler that handles the tasks when the car is proceeding into the washing machine
+*/
 class ProceedingHandler : public TaskHandler{
 private:
   LcdTask* lcd; // 5

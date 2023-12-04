@@ -19,6 +19,9 @@
 #define BUTTON_PIN 3
 #define TEMP_SENSOR_PIN A3
 
+/**
+ * Class that contains all the components of the washing machine
+*/
 class WashingComponents {
 public:
   Led* green1;
@@ -31,6 +34,9 @@ public:
   Button* button;
   TempSensor* tempSensor;
 public:
+  /**
+   * Constructor that initializes all the components
+  */
   WashingComponents() {
     this->green1 = new Led(GREEN_LED1_PIN);
     this->red2 = new Led(RED_LED_PIN);

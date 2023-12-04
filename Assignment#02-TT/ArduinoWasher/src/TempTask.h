@@ -6,8 +6,10 @@
 #include "LcdDisplay.h"
 #include "LcdTask.h"
 
+// if this symbol iis received than the temperature error is resolved
 #define RESOLVE '1'
-#define TEMP_THRESHOLD 20.0
+#define TEMP_THRESHOLD 60.0
+// time to wait before the temperature is considered to be too high
 #define N5 2*1000
 
 class TempTask : public Task {
@@ -17,13 +19,24 @@ private:
   LcdTask* lcdTask;
   float temp;
   bool isError;
-  long minimumTime;
+  long tresholdTime;
 public:
-    TempTask(TempSensor* tempSensor, LcdDisplay* lcdDisplay, LcdTask* lcdTask);
-    void init(int period);
-    void tick();
-    void setError();
-    void checkResolution();
+  /**
+   * Initialize a temperature task
+   * @param tempSensor The temperature sensor to use
+   * @param lcdTask The lcd task to use
+  */
+  TempTask(TempSensor* tempSensor, LcdTask* lcdTask);
+  void init(int period);
+  void tick();
+  /**
+   * Sets the entire system in a state of error
+  */
+  void setError();
+  /**
+   * Checks if the error has been resolved
+  */
+  void checkResolution();
 };
 
 #endif

@@ -9,6 +9,9 @@
 
 #define ENT_TASKS_COUNT 3
 
+/**
+ * Task handler that handles the tasks when the car has entered the washing machine
+*/
 class EnteredHandler : public TaskHandler {
 private:
   LcdTask* lcd; // 9

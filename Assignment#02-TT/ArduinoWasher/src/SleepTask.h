@@ -5,6 +5,9 @@
 #include <avr/sleep.h>
 #include <Arduino.h>
 
+/**
+ * Task that handles a sleep state
+*/
 class SleepTask: public Task {
   public:
     void init(int period);  

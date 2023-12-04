@@ -7,6 +7,9 @@
 
 #define SLEEP_TASKS_COUNT 1
 
+/**
+ * Class to handle the sleep state when no car is around
+*/
 class SleepHandler : public TaskHandler {
 private:
   SleepTask* sleep; // 1

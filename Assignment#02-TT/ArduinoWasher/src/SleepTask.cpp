@@ -6,6 +6,9 @@ void SleepTask::init(int period) {
 }
 
 void SleepTask::tick() {
+  /**
+   * Every time the task is called, the Arduino goes to sleep
+  */
   Serial.println("Going to sleep...");
   Serial.flush();
   sleep_enable();

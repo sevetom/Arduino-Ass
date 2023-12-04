@@ -10,6 +10,9 @@
 #define WASH_TASKS_COUNT 4
 #define WASH_TIME 16*1000
 
+/**
+ * Task handler that handles the tasks when the car is being washed
+*/
 class WashingHandler : public TaskHandler{
 private:
   LedTask *led; // 12

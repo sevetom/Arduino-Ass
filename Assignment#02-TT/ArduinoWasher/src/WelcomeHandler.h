@@ -7,8 +7,12 @@
 #include "CountDown.h"
 
 #define WELCOME_TASKS_COUNT 3
+// time to wait for welcoming the car
 #define N1 5000
 
+/**
+ * Task handler that handles the tasks when the car is first welcomed
+*/
 class WelcomeHandler : public TaskHandler {
 private:
   LedTask* led; // 2

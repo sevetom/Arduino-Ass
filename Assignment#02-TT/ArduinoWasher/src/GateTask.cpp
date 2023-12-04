@@ -12,6 +12,10 @@ void GateTask::init(int period) {
 }
 
 void GateTask::tick() {
+  /**
+   * First checks if the gate is already opening/closing
+   * If not it opens/closes the gate and starts counting the cycles
+  */
   delay(10);
   if (this->cycles == 0) {
     this->gate->on();
@@ -24,11 +28,17 @@ void GateTask::tick() {
         break;
     }
   }
+  /**
+   * When the cycles are done it stops the gate and turns it off
+  */
   this->cycles += this->cycles != -1 ? 1 : 0;
   if (this->cycles >= (this->mode == OPEN ? OPEN_CYCLES : CLOSE_CYCLES)) {
     this->cycles = -1;
     this->gate->stop();
     this->gate->off();
+    /**
+     * If needed it calls the interrupt function
+    */
     if (this->interruptFunction != NULL) {
       this->interruptFunction();
     }

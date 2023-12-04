@@ -9,14 +9,31 @@
 #include <string.h>
 
 /*
-* Wiring: SDA => A4, SCL => A5
+* Class that handles a LCD display
 */
 class LcdDisplay{
     LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, MAX_LENGTH, MAX_LINES);
 public:
+    /**
+     * Initialize the LCD display
+     * Wiring: SDA => A4, SCL => A5
+    */
     LcdDisplay();
+    /**
+     * Print a text on multiple lines on the LCD display
+     * @param text The text to print
+    */
     void printLong(const char* text);
+    /**
+     * Print a text on a specific line and row on the LCD display
+     * @param text The text to print
+     * @param row The row to print the text on
+     * @param line The line to print the text on
+    */
     void printText(const char* text, int row, int line);
+    /**
+     * Clears the LCD display
+    */
     void clear();
 };
 

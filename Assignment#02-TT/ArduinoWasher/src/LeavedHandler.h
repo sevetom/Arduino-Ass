@@ -8,6 +8,9 @@
 
 #define LEAVED_TASKS_COUNT 3
 
+/**
+ * Task handler that handles the tasks when the car has leaved the washing machine
+*/
 class LeavedHandler : public TaskHandler {
 private:
   GateTask* gate; // 21

@@ -9,6 +9,9 @@
 
 #define EXT_TASKS_COUNT 5
 
+/**
+ * Task handler that handles the tasks when the car is exiting the washing machine
+*/
 class ExitingHandler : public TaskHandler {
 private:
   LcdTask* lcd; // 16
