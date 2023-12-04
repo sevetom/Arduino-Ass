@@ -16,7 +16,7 @@ class View:
         self.temperature = 0
         
         self.label_car = tk.Label(self.frame_lable, text="Car Washed\n"+str(self.car_washed))
-        self.label_status = tk.Label(self.frame_lable, text="Status\n"+str("OK" if self.status else "ERROR"), fg="white", bg="gray", borderwidth=5, relief="sunken")
+        self.label_status = tk.Label(self.frame_lable, text="Status\n"+str("OK" if self.status == "OK" else "ERROR"), fg="white", bg="gray", borderwidth=5, relief="sunken")
         self.label_temp = tk.Label(self.frame_lable, text="Temperature\n"+str("N/D" if self.temperature == 0 else self.temperature)+"°C")
         
         for label in [self.label_car, self.label_status, self.label_temp]:
@@ -49,7 +49,7 @@ class View:
     
     def update_labels(self):
         self.label_car.config(text="Car Washed\n"+str(self.car_washed))
-        self.label_status.config(text="Status\n"+str("OK" if self.status else "ERROR"), fg="white", bg="gray")
+        self.label_status.config(text="Status\n"+str("OK" if self.status == "OK" else "ERROR"), fg="white", bg="gray")
         self.label_temp.config(text="Temperature\n"+str("N/D" if self.temperature == 0 else self.temperature)+"°C")
         if self.status is "ERROR":
             self.flash_label()

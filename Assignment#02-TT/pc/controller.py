@@ -31,26 +31,24 @@ class Controller:
 
     def read_serial(self):
         while True:
-            if self.view.status == "ERROR":
-                if self.view.status != self.status:
-                    self.status = self.view.status
-                    self.send_satatus()
+            if self.status == "ERROR" and self.view.status == "OK":
+                self.status = self.view.status
+                self.send_resolved_satatus()
                 continue
             if self.serialInst.in_waiting:
                 packet = self.serialInst.readline()
                 packetDecoded = packet.decode('utf').rstrip("\n")
+                print(packetDecoded)
                 if not packetDecoded or not packetDecoded.startswith("Packet: "):
                     continue
                 if packetDecoded.startswith("Packet: Temperature: "):
                     self.temperature = float(packetDecoded.split(" ")[2])
-                    if self.temperature >= 50.0:
-                        self.status = "ERROR"
-                    else:
-                        self.status = "OK"
                 elif packetDecoded.startswith("Packet: Car Washed: "):
                     self.car_washed += 1
+                elif packetDecoded.startswith("Packet: Error: "):
+                    self.status = "ERROR"
                 self.view.set_data(self.car_washed, self.status, self.temperature)
 
-    def send_satatus(self):
-        self.serialInst.write(f"Packet: Status: {self.status}\n".encode())
+    def send_resolved_satatus(self):
+        self.serialInst.write(f"1".encode())
         print(f"Packet: Status: {self.status} SEND")
