@@ -12,7 +12,7 @@
 #include "LeavedHandler.h"
 #include "TempSensor.h"
 
-#define TASK_HANDLERS 7
+#define TASK_HANDLERS 7-1
 
 typedef enum {
   SLEEPING,
@@ -24,7 +24,7 @@ typedef enum {
   LEAVED
 } taskHandlerType;
 
-void insertTasks(Task** list);
+void insertTasks(Task** list, int lenght);
 
 Scheduler* sched;
 WashingComponents* hw;
@@ -45,11 +45,11 @@ void setup() {
   taskHandlers[ENTERED] = new EnteredHandler();
   taskHandlers[WASHING] = new WashingHandler();
   taskHandlers[EXITING] = new ExitingHandler();
-  taskHandlers[LEAVED] = new LeavedHandler();
+  //taskHandlers[LEAVED-3] = new LeavedHandler();
   for (int i = 0; i < TASK_HANDLERS; i++){
     taskHandlers[i]->setHandler([](){ stateHandlerTask->changeState(); }, hw);
     taskHandlers[i]->initTasks();
-    insertTasks(taskHandlers[i]->getTasks());
+    insertTasks(taskHandlers[i]->getTasks(), taskHandlers[i]->getTasksCount());
     delay(100);
   }
   stateHandlerTask->changeTasks();
@@ -59,10 +59,8 @@ void loop() {
 	sched->schedule();
 }
 
-void insertTasks(Task** list) {
-  int cur = 0;
-  while(list[cur] != NULL) {
-    sched->addTask(list[cur]);
-    cur++;
+void insertTasks(Task** list, int lenght) {
+  for (int i = 0; i < lenght; i++) {
+    sched->addTask(list[i]);
   }
 }

@@ -4,6 +4,7 @@ GateTask::GateTask(Gate* gate, gateMode mode) {
   this->gate = gate;
   this->mode = mode;
   this->cycles = 0;
+  this->interruptFunction = NULL;
 }
 
 void GateTask::init(int period) {
@@ -28,10 +29,21 @@ void GateTask::tick() {
     this->cycles = -1;
     this->gate->stop();
     this->gate->off();
+    if (this->interruptFunction != NULL) {
+      this->interruptFunction();
+    }
   }
 }
 
 void GateTask::restart() {
   this->timeElapsed = 0;
   this->cycles = 0;
+}
+
+void GateTask::setInterruptFun(InterruptFun f, bool state) {
+  if (state) {
+    this->interruptFunction = f;
+  } else {
+    this->interruptFunction = NULL;
+  }
 }

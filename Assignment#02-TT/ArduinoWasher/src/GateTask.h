@@ -17,10 +17,13 @@ private:
   Gate* gate;
   gateMode mode;
   int cycles;
+  using InterruptFun = void (*)();
+  InterruptFun interruptFunction;
 public:
   GateTask(Gate* gate, gateMode mode);
   void init(int period);
   void tick();
   void restart();
+  void setInterruptFun(InterruptFun f, bool state);
 };
 #endif

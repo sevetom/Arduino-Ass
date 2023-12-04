@@ -6,15 +6,14 @@
 #include "GateTask.h"
 #include "CountDown.h"
 
-#define LEAVED_TASKS_COUNT 4
+#define LEAVED_TASKS_COUNT 3
 #define N5 5*1000
 
 class LeavedHandler : public TaskHandler {
 private:
+  GateTask* gate; // 21
   LedTask* led1; // 22
   LedTask* led3; // 23
-  GateTask* gate; // 24
-  CountDown* timer; // 25
 public:
   void initTasks();
   void setChangeState(bool state);
