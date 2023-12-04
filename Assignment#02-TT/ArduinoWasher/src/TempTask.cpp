@@ -1,8 +1,9 @@
 #include "TempTask.h"
 
-TempTask::TempTask(TempSensor* tempSensor, LcdDisplay* lcdDisplay) {
+TempTask::TempTask(TempSensor* tempSensor, LcdDisplay* lcdDisplay, LcdTask* lcdTask) {
     this->tempSensor = tempSensor;
     this->lcd = lcdDisplay;
+    this->lcdTask = lcdTask;
     this->temp = 0;
     this->isError = false;
     this->minimumTime = 0;
@@ -14,8 +15,8 @@ void TempTask::init(int period){
 
 void TempTask::tick(){
   this->temp = this->tempSensor->getTemperature();
-  Serial.println("Packet: Temperature: " + String(this->temp));
-  if (this->temp > TEMP_THRESHOLD) {
+  Serial.println("Packet: Temperature: " + String(this->temp) + " minimumTime: " + String(this->minimumTime));
+  if (this->temp > TEMP_THRESHOLD || this->temp == 0) {
     if (this->minimumTime >= N5) {
         this->setError();
       } else {
@@ -34,8 +35,7 @@ void TempTask::setError() {
   do {
       this->checkResolution();
   } while (this->isError);
-  this->lcd->clear();
-  this->lcd->printLong("Washing: ");
+  this->lcdTask->restart();
   this->minimumTime = 0;
 }
 

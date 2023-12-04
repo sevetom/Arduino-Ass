@@ -4,6 +4,7 @@
 #include "Task.h"
 #include "TempSensor.h"
 #include "LcdDisplay.h"
+#include "LcdTask.h"
 
 #define RESOLVE '1'
 #define TEMP_THRESHOLD 20.0
@@ -13,11 +14,12 @@ class TempTask : public Task {
 private:
   TempSensor* tempSensor;
   LcdDisplay* lcd;
+  LcdTask* lcdTask;
   float temp;
   bool isError;
   long minimumTime;
 public:
-    TempTask(TempSensor* tempSensor, LcdDisplay* lcdDisplay);
+    TempTask(TempSensor* tempSensor, LcdDisplay* lcdDisplay, LcdTask* lcdTask);
     void init(int period);
     void tick();
     void setError();
