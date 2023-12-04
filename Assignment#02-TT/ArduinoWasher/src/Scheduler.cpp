@@ -1,18 +1,19 @@
 #include "Scheduler.h"
-#include <TimerOne.h>
+//#include <TimerOne.h>
 
-volatile bool timerFlag;
+//volatile bool timerFlag;
 
-void timerHandler(void){
-  timerFlag = true;
-}
+//void timerHandler(void){
+//  timerFlag = true;
+//}
 
-void Scheduler::init(long basePeriod){
+void Scheduler::init(unsigned long basePeriod){
   this->basePeriod = basePeriod;
-  timerFlag = false;
-  long period = 1000l*basePeriod;
-  Timer1.initialize(period);
-  Timer1.attachInterrupt(timerHandler);
+  this->lastLoopTime = 0;
+  //timerFlag = false;
+  //long period = 1000l*basePeriod;
+  //Timer1.initialize(period);
+  //Timer1.attachInterrupt(timerHandler);
   this->nTasks = 0;
   this->startWindow = 1;
   this->endWindow = 1;
@@ -41,10 +42,11 @@ void Scheduler::resetWindow(){
   this->endWindow = 1;
 }
   
-void Scheduler::schedule(){   
-  while (!timerFlag){ }
-  Timer1.setPeriod(this->basePeriod*1000l);
-  timerFlag = false;
+void Scheduler::schedule(){
+  while (millis() - this->lastLoopTime < this->basePeriod){ }
+  this->lastLoopTime = millis();
+  //Timer1.setPeriod(this->basePeriod*1000l);
+  //timerFlag = false;
   if (this->taskList[0]->updateAndCheckTime(this->basePeriod)) {
     Serial.println("Tasks: 0");
     this->taskList[0]->tick();
