@@ -12,7 +12,7 @@
 #include "LeavedHandler.h"
 #include "TempSensor.h"
 
-#define TASK_HANDLERS 7-1
+#define TASK_HANDLERS 7
 
 typedef enum {
   SLEEPING,
@@ -45,7 +45,7 @@ void setup() {
   taskHandlers[ENTERED] = new EnteredHandler();
   taskHandlers[WASHING] = new WashingHandler();
   taskHandlers[EXITING] = new ExitingHandler();
-  //taskHandlers[LEAVED-3] = new LeavedHandler();
+  taskHandlers[LEAVED] = new LeavedHandler();
   for (int i = 0; i < TASK_HANDLERS; i++){
     taskHandlers[i]->setHandler([](){ stateHandlerTask->changeState(); }, hw);
     taskHandlers[i]->initTasks();

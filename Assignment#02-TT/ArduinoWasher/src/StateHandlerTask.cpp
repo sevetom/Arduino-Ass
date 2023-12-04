@@ -30,7 +30,7 @@ void StateHandlerTask::changeTasks() {
   }
   this->currentHandler++;
   if (this->currentHandler >= this->handlerCount) {
-    Serial.println("Reset state");
+    Serial.println("Packet: Car Washed: 1");
     this->currentHandler = 0;
     this->sched->resetWindow();
   }

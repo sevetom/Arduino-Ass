@@ -22,7 +22,6 @@ bool Scheduler::addTask(Task* task){
   if (this->nTasks < MAX_TASKS-1){
     this->taskList[nTasks] = task;
     this->nTasks++;
-    Serial.println("Task added " + String(this->nTasks));
     return true;
   } else {
     return false; 
@@ -35,10 +34,7 @@ void Scheduler::shiftTasks(int shift){
 }
 
 void Scheduler::resetWindow(){
-  Serial.println("nTasks: " + String(this->nTasks));
   for (int i = 0; i < this->nTasks; i++){
-    Serial.println("Restart task " + String(i));
-    delay(10);
     this->taskList[i]->restart();
   }
   this->startWindow = 1;
@@ -46,7 +42,7 @@ void Scheduler::resetWindow(){
 }
   
 void Scheduler::schedule(){   
-  while (!timerFlag){}
+  while (!timerFlag){ }
   Timer1.setPeriod(this->basePeriod*1000l);
   timerFlag = false;
   if (this->taskList[0]->updateAndCheckTime(this->basePeriod)) {
