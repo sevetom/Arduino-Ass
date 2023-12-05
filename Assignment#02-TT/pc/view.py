@@ -4,6 +4,8 @@ class View:
 
     def __init__(self):
         self.root = tk.Tk()
+        img = tk.PhotoImage(file='./img/arduino_icon.png')
+        self.root.iconphoto(False, img)
         self.root.title("Dashboard")
         self.configure_main_window()
         self.frame_lable = tk.Frame(self.root)
@@ -15,9 +17,9 @@ class View:
         self.status = "OK"
         self.temperature = 0
         
-        self.label_car = tk.Label(self.frame_lable, text="Car Washed\n"+str(self.car_washed))
+        self.label_car = tk.Label(self.frame_lable, text="Car Washed\n"+str(self.car_washed), borderwidth=1, relief="solid")
         self.label_status = tk.Label(self.frame_lable, text="Status\n"+str("OK" if self.status == "OK" else "ERROR"), fg="white", bg="gray", borderwidth=5, relief="sunken")
-        self.label_temp = tk.Label(self.frame_lable, text="Temperature\n"+str("N/D" if self.temperature == 0 else self.temperature)+"°C")
+        self.label_temp = tk.Label(self.frame_lable, text="Temperature\n"+str("N/D" if self.temperature == 0 else self.temperature)+"°C", borderwidth=1, relief="solid")
         
         for label in [self.label_car, self.label_status, self.label_temp]:
             label.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -26,6 +28,7 @@ class View:
         self.frame_button.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=10)
         
         self.button = tk.Button(self.frame_button, text="Maintenance done", command=self.on_click)
+        self.button.config(state='disabled')
         self.button.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         
     def set_data(self, car_washed, status, temperature):
@@ -48,11 +51,12 @@ class View:
         self.label_car.config(text="Car Washed\n"+str(self.car_washed))
         self.label_status.config(text="Status\n"+str("OK" if self.status == "OK" else "ERROR"), fg="white", bg="gray")
         self.label_temp.config(text="Temperature\n"+str("N/D" if self.temperature == 0 else self.temperature)+"°C")
-        if self.status is "ERROR":
+        if self.status == "ERROR":
+            self.button.config(state='normal')
             self.flash_label()
         
     def flash_label(self):
-        if self.status is "ERROR":
+        if self.status == "ERROR":
             if self.error_flashing:
                 self.label_status.config(fg="red", bg="white")
             else:
@@ -64,6 +68,7 @@ class View:
             
     def on_click(self):
         self.status = "OK"
+        self.button.config(state='disabled')
         self.update_labels()
 
     def run(self):
