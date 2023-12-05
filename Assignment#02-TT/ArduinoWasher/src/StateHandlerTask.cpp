@@ -24,7 +24,6 @@ void StateHandlerTask::tick() {
 }
 
 void StateHandlerTask::changeTasks() {
-  Serial.println("Change state " + String(this->currentHandler) + " to " + String(this->currentHandler + 1));
   if (this->currentHandler != -1) {
     this->taskHandlers[currentHandler]->setChangeState(false);
   }

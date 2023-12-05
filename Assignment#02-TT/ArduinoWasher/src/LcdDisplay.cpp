@@ -6,11 +6,17 @@ LcdDisplay::LcdDisplay() {
 }
 
 void LcdDisplay::printLong(const char* text) {
-  char* token = strtok((char*)text, "\n");
+  char textCopy[strlen(text) + 1];
+  strcpy(textCopy, text);
+
+  this->lcd.clear();
+  
+  char* token = strtok(textCopy, "\n");
   if (token != NULL) {
     this->lcd.setCursor(0, 0);
     this->lcd.print(token);
   }
+
   token = strtok(NULL, "\n");
   if (token != NULL) {
     this->lcd.setCursor(0, 1);

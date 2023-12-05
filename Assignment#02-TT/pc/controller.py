@@ -51,4 +51,3 @@ class Controller:
 
     def send_resolved_satatus(self):
         self.serialInst.write(f"1".encode())
-        print(f"Packet: Status: {self.status} SEND")

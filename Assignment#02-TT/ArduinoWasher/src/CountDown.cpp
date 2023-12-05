@@ -34,6 +34,10 @@ void CountDown::reset() {
   this->currentTime = 0;
 }
 
+void CountDown::resetTime() {
+  this->currentTime = 0;
+}
+
 long CountDown::getTime() {
   return this->currentTime;
 }

@@ -1,14 +1,14 @@
 #include "WashingHandler.h"
 
 void WashingHandler::initTasks(){
-    led = new LedTask(this->hw->red2, BLINK);
-    led->init(500);
-    timer = new CountDown(WASH_TIME, this->changeFun);
-    timer->init(150);
-    lcd = new LcdTask(this->hw->lcd, "Washing:", timer);
-    lcd->init(150);
-    tempSensor = new TempTask(this->hw->tempSensor, this->hw->lcd, lcd);
-    tempSensor->init(150);
+    this->led = new LedTask(this->hw->red2, BLINK);
+    this->led->init(500);
+    this->timer = new CountDown(WASH_TIME, this->changeFun);
+    this->timer->init(150);
+    this->lcd = new LcdTask(this->hw->lcd, "Washing:", timer);
+    this->lcd->init(150);
+    this->tempSensor = new TempTask(this->hw->tempSensor, this->lcd);
+    this->tempSensor->init(150);
     this->tasksHandled[0] = led;
     this->tasksHandled[1] = lcd;
     this->tasksHandled[2] = timer;

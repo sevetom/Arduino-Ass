@@ -27,14 +27,13 @@ void TempTask::tick(){
         this->setError();
       } else {
         this->tresholdTime += this->myPeriod + this->timeElapsed;
-      } 
+      }
   } else {
     this->tresholdTime = 0;
   }
 }
 
 void TempTask::setError() {
-  this->lcd->clear();
   this->lcd->printLong("Detected a Problem \n - Please Wait");
   this->isError = true;
   Serial.println("Packet: Error: " + String(this->isError));

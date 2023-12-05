@@ -8,9 +8,9 @@
 
 // if this symbol iis received than the temperature error is resolved
 #define RESOLVE '1'
-#define TEMP_THRESHOLD 60.0
+#define TEMP_THRESHOLD 50.0
 // time to wait before the temperature is considered to be too high
-#define N5 2*1000
+#define N5 3*1000
 
 class TempTask : public Task {
 private:

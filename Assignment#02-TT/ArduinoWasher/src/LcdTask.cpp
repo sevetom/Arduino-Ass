@@ -27,7 +27,6 @@ void LcdTask::tick() {
    * if not already printed
   */
   if (!this->printStatus) {
-    this->lcd->clear();
     this->lcd->printLong(this->message);
     this->printStatus = true;
   }
@@ -47,7 +46,7 @@ void LcdTask::restart() {
   this->printStatus = false;
   this->lcd->clear();
   if (this->mode == LOADING_BAR) {
-    this->timer->reset();
+    this->timer->resetTime();
   }
 }
 

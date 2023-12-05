@@ -39,6 +39,10 @@ public:
    * Restarts the timer
   */
   void restart();
+  /**
+   * Resets the time passed since the timer started
+  */
+  void resetTime();
 };
 
 #endif

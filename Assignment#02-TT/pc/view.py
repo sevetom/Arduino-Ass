@@ -35,7 +35,6 @@ class View:
         self.car_washed = car_washed
         self.status = status
         self.temperature = temperature
-        print(f"Car Washed: {self.car_washed} Status: {self.status} Temperature: {self.temperature}")
         self.update_labels()
         
     def configure_main_window(self):
