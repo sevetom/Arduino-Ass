@@ -22,7 +22,7 @@ void TempTask::tick(){
   /**
    * If the temperature is too high for too long sets the error state
   */
-  if (this->temp > TEMP_THRESHOLD || this->temp == 0) {
+  if (this->temp > TEMP_THRESHOLD) {
     if (this->tresholdTime >= N5) {
         this->setError();
       } else {
