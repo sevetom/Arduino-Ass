@@ -21,6 +21,7 @@ public:
     LcdDisplay();
     /**
      * Print a text on multiple lines on the LCD display
+     * Clears the screen before printing
      * @param text The text to print
     */
     void printLong(const char* text);
@@ -31,6 +32,13 @@ public:
      * @param line The line to print the text on
     */
     void printText(const char* text, int row, int line);
+    /**
+     * Print two texts on two lines on the LCD display
+     * Clears the screen before printing
+     * @param text1 The text to print on the first line
+     * @param text2 The text to print on the second line
+    */
+    void printTwoLines(const char* text1, const char* text2);
     /**
      * Clears the LCD display
     */

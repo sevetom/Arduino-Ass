@@ -13,6 +13,7 @@
 class Gate{
   int pin;
   Servo servo;
+  int currentAngle;
 public:
   /**
    * Initialize the gate
@@ -20,25 +21,9 @@ public:
   */
   Gate(int pin);
   /**
-   * Attaches the servo to the pin
+   * Sets the gate to a certain angle if possible
   */
-  void on();
-  /**
-   * Detaches the servo from the pin
-  */
-  void off();
-  /**
-   * Starts opening the gate
-  */
-  void open();
-  /**
-   * Starts closing the gate
-  */
-  void close();
-  /**
-   * Stops the gate
-  */
-  void stop();
+  void setAngle(int angle);
 };
 
 #endif

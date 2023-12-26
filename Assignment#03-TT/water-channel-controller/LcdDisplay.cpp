@@ -29,6 +29,14 @@ void LcdDisplay::printText(const char* text, int row, int line) {
   this->lcd.print(text);
 }
 
+void LcdDisplay::printTwoLines(const char* text1, const char* text2) {
+  this->lcd.clear();
+  this->lcd.setCursor(0, 0);
+  this->lcd.print(text1);
+  this->lcd.setCursor(0, 1);
+  this->lcd.print(text2);
+}
+
 void LcdDisplay::clear() {
   this->lcd.clear();
 }

@@ -4,22 +4,13 @@ Gate::Gate(int pin) {
   this->pin = pin;
 }
 
-void Gate::on() {
-  this->servo.attach(this->pin);
-}
-
-void Gate::off() {
-  this->servo.detach();
-}
-
-void Gate::open() {
-  this->servo.write(80);
-}
-
-void Gate::close() {
-  this->servo.write(100);
-}
-
-void Gate::stop() {
-  this->servo.write(90);
+void Gate::setAngle(int angle) {
+  if (angle >= MIN_ANGLE && angle <= MAX_ANGLE) {
+    this->servo.attach(this->pin);
+    for (int a = this->currentAngle; a != angle; a += (angle > this->currentAngle) ? 1 : -1) {
+      this->servo.write(a);
+      delay(10);
+    }
+    this->servo.detach();
+  }
 }
