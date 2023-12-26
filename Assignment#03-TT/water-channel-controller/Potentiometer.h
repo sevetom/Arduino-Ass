@@ -6,6 +6,9 @@
 #define POT_MIN 20
 #define POT_MAX 900
 
+/**
+ * Class used to manage the potentiometer
+*/
 class Potentiometer {
 private:
     int pin;

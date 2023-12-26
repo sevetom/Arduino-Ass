@@ -23,6 +23,10 @@ void changeModality();
 */
 int serialRead();
 /**
+ * @brief Print the status of the system
+*/
+void printStatus();
+/**
  * @brief Convert a char to an int
  * @param c The char to convert
  * @return The int value of the char
@@ -30,6 +34,7 @@ int serialRead();
 int charToInt(char c);
 
 volatile modality currentModality;
+Components* hw;
 
 void setup() {
     Serial.begin(9600);
@@ -51,7 +56,7 @@ void loop() {
     if (value >= 0) {
         int angle = map(value, MIN_PERC, MAX_PERC, hw->gate->MIN_ANGLE, hw->gate->MAX_ANGLE);
         hw->gate->setAngle(angle);
-        hw->lcd->printTwoLines("Angle: " + String(angle), "Modality: " + String(currentModality));
+        printStatus();
     }
 }
 
@@ -69,6 +74,14 @@ int serialRead() {
         }
     }
     return INVALID;
+}
+
+void printStatus() {
+    char line1[10];
+    char line2[10];
+    sprintf(line1, "Angle: %d", angle);
+    sprintf(line2, "Modality: %d", currentModality);
+    hw->lcd->printTwoLines(line1, line2);
 }
 
 int charToInt(char c) {
