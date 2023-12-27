@@ -44,21 +44,27 @@ bool MqttConnection::getStatus() {
     return this->client.connected();
 }
 
+byte* MqttConnection::getMessageReceived() {
+    return this->messageReceived;
+}
+
 void MqttConnection::tick() {
     this->client.loop();
 }
 
-String MqttConnection::this->getConfigValue(const char *key) {
-  File configFile = SPIFFS.open(this->configFile, "r");
-  size_t size = configFile.size();
-  std::unique_ptr<char[]> buf(new char[size]);
-  configFile.readBytes(buf.get(), size);
-  configFile.close();
-  DynamicJsonDocument jsonDoc(1024);
-  deserializeJson(jsonDoc, buf.get());
-  return jsonDoc[key].as<String>();
+String MqttConnection::this->getConfigValue(const char* key) {
+    File configFile = SPIFFS.open(this->configFile, "r");
+    size_t size = configFile.size();
+    std::unique_ptr<char[]> buf(new char[size]);
+    configFile.readBytes(buf.get(), size);
+    configFile.close();
+    DynamicJsonDocument jsonDoc(1024);
+    deserializeJson(jsonDoc, buf.get());
+    return jsonDoc[key].as<String>();
 }
 
-void callback(char *topic, byte *payload, unsigned int length) {
-  // !TODO: Handle the message from the MQTT server
+void callback(char* topic, byte* payload, unsigned int length) {
+    if (topic == this->getConfigValue("mqtt_topic").c_str()) {
+        this->messageReceived = payload;
+    }
 }

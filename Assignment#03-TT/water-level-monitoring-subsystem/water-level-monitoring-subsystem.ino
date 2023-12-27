@@ -4,7 +4,8 @@
 #define MQTT_CONFIG "./mqttConfig.json"
 
 void checkConnection();
-void readWaterLevel();
+void sendWaterLevel();
+int getFrequency();
 
 MqttConnection* connection;
 Components* hw;
@@ -18,14 +19,8 @@ void setup() {
 
 void loop() {
 	checkConnection();
-	readWaterLevel();
-	// !TODO: Set the frequency of the water level reading
-}
-
-void readWaterLevel() {
-	char message[10];
-	sprintf(message, "%d", hw->sonar->getDistance());
-	connection->sendMessagge(message);
+	sendWaterLevel();
+	delay(getFrequency());
 }
 
 void checkConnection() {
@@ -37,4 +32,14 @@ void checkConnection() {
 		hw->redLed->off();
 	}
 	connection->tick();
+}
+
+void sendWaterLevel() {
+	char message[10];
+	sprintf(message, "%d", hw->sonar->getDistance());
+	connection->sendMessagge(message);
+}
+
+int getFrequency() {
+	return atoi((char *)connection->getMessageReceived());
 }

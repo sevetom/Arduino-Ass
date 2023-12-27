@@ -26,6 +26,7 @@ private:
     WiFiClient espClient;
     PubSubClient client(espClient);
     char* configFile;
+    byte* messageReceived;
 public:
     /**
      * Initialize the MQTT connection
@@ -50,6 +51,10 @@ public:
      * @return true if the connection is active, false otherwise
     */
     bool getStatus();
+    /**
+     * Get the last message received from the MQTT server
+    */
+    byte* getMessageReceived();
     /**
      * Tick the MQTT connection
     */
