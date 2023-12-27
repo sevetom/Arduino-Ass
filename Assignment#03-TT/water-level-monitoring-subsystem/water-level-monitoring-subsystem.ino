@@ -1,7 +1,7 @@
 #include "Components.h"
 #include "MqttConnection.h"
 
-#define MQTT_CONFIG "./mqttConfig.json"
+#define MQTT_CONFIG "../config/mqttConfig.json"
 
 void checkConnection();
 void sendWaterLevel();

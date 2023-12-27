@@ -6,8 +6,6 @@
 #include <ArduinoJson.h>
 #include <FS.h>
 
-#define SEVER_PORT 1883
-
 /**
  * Class used to manage the MQTT connection
  * it uses a json file to load the configuration

@@ -17,7 +17,7 @@ void MqttConnection::connect() {
     Serial.println("");
     Serial.print("Connected to WiFi network with IP Address: ");
     Serial.println(WiFi.localIP());
-    client.setServer(this->getConfigValue("mqtt_server").c_str(), SEVER_PORT);
+    client.setServer(this->getConfigValue("mqtt_server").c_str(), this->getConfigValue("mqtt_port").c_str());
     client.setCallback(this->callback);
 }
 
