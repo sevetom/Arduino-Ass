@@ -1,0 +1,119 @@
+import paho.mqtt.client as mqtt
+import serial
+import time
+import json
+
+# Function to load MQTT configuration from file
+def load_mqtt_config():
+    with open("../config/mqttConfig.json", "r") as config_file:
+        config_data = json.load(config_file)
+        return (
+            config_data["mqtt_server"],
+            config_data["mqtt_port"],
+            config_data["mqtt_topic"],
+            config_data["mqtt_username"],
+            config_data["mqtt_password"]
+        )
+        
+# Function to load Arduino configuration from file
+def load_arduino_config():
+    with open("../config/arduinoConfig.json", "r") as config_file:
+        config_data = json.load(config_file)
+        return (
+            config_data["serial_port"],
+            config_data["baud_rate"]
+        )
+
+# Connects to the mqtt server
+mqtt_server, mqtt_port, mqtt_topic, mqtt_username, mqtt_password = load_mqtt_config()
+mqtt_client = mqtt.Client()
+mqtt_client.username_pw_set(username=mqtt_username, password=mqtt_password)
+mqtt_client.connect(mqtt_server, mqtt_port, 60)
+mqtt_client.subscribe(mqtt_topic)
+
+# Connects to the arduino
+arduino_serial_port, arduino_serial_baudrate = load_arduino_config()
+
+# Water Level Thresholds
+WL1 = 10
+WL2 = 20
+WL3 = 30
+WL4 = 40
+
+# Monitoring Frequencies in seconds
+F1 = 60
+F2 = 30
+
+# Valve Opening Levels
+valve_normal = 25
+valve_alarm_low = 0
+valve_pre_alarm_high = 25
+valve_alarm_high = 50
+valve_critic_high = 100
+
+# States of the system
+normal_state = "NORMAL"
+alarm_too_low = "ALARM-TOO-LOW"
+pre_alarm_too_high = "PRE-ALARM-TOO-HIGH"
+alarm_too_high = "ALARM-TOO-HIGH"
+alarm_too_high_critic = "ALARM-TOO-HIGH-CRITIC"
+
+# Initial state
+current_state = "NORMAL"
+# Initial monitoring frequency
+monitoring_frequency = F1
+# Initial valve opening level
+valve_opening_level = valve_normal
+
+# Sends the data to the arduino and the mqtt client
+def send_data():
+    global monitoring_frequency
+    global valve_opening_level
+
+    with serial.Serial(arduino_serial_port, arduino_serial_baudrate) as ser:
+        ser.write(f"{valve_opening_level}\n".encode())
+
+    mqtt_payload = json.dumps({"frequency": monitoring_frequency})
+    mqtt_client.publish(mqtt_topic, mqtt_payload)
+
+# Changes the values dependening on the state
+def change_state(state, frequency, opening_level):
+    global current_state
+    global monitoring_frequency
+    global valve_opening_level
+    
+    current_state = state
+    monitoring_frequency = frequency
+    valve_opening_level = opening_level
+
+def on_message(client, userdata, msg):
+    global current_state
+    global monitoring_frequency
+    global valve_opening_level
+
+    water_level = int(msg.payload.decode())
+
+    if WL1 <= water_level <= WL2:
+        change_state(normal_state, F1, valve_normal)
+    elif water_level < WL1:
+        change_state(alarm_too_low, F1, valve_alarm_low)
+    elif WL2 < water_level <= WL3:
+        change_state(pre_alarm_too_high, F2, valve_pre_alarm_high)
+    elif WL3 < water_level <= WL4:
+        change_state(alarm_too_high, F2, valve_alarm_high)
+    else:
+        change_state(alarm_too_high_critic, F2, valve_critic_high)
+        
+    send_data()
+
+if __name__ == "__main__":
+    mqtt_client.on_message = on_message
+    mqtt_client.loop_start()
+    send_data();
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        mqtt_client.disconnect()
+        mqtt_client.loop_stop()
