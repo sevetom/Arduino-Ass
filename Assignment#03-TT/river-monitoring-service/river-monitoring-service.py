@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt
+from flask import Flask, jsonify, request
 import serial
 import time
 import json
@@ -34,6 +35,9 @@ mqtt_client.subscribe(mqtt_topic)
 # Connects to the arduino
 arduino_serial_port, arduino_serial_baudrate = load_arduino_config()
 
+# Sets up the flask app
+app = Flask(__name__)
+
 # Water Level Thresholds
 WL1 = 10
 WL2 = 20
@@ -64,6 +68,8 @@ current_state = "NORMAL"
 monitoring_frequency = F1
 # Initial valve opening level
 valve_opening_level = valve_normal
+# Water Level
+water_level = 0
 
 # Sends the data to the arduino and the mqtt client
 def send_data():
@@ -90,6 +96,7 @@ def on_message(client, userdata, msg):
     global current_state
     global monitoring_frequency
     global valve_opening_level
+    global water_level
 
     water_level = int(msg.payload.decode())
 
@@ -105,10 +112,31 @@ def on_message(client, userdata, msg):
         change_state(alarm_too_high_critic, F2, valve_critic_high)
         
     send_data()
+    
+@app.route("/status", methods=["GET"])
+def get_status():
+    global water_level, current_state, valve_opening_level
+    return jsonify({
+        "water_level": water_level,
+        "system_state": current_state,
+        "valve_opening_level": valve_opening_level
+    })
+
+@app.route("/control", methods=["POST"])
+def control_valve():
+    global current_state, monitoring_frequency, valve_opening_level
+    try:
+        # Ottieni il livello di apertura desiderato dalla richiesta
+        valve_level = int(request.form.get("valve_level"))
+        change_state(current_state, monitoring_frequency, valve_level)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
 if __name__ == "__main__":
     mqtt_client.on_message = on_message
     mqtt_client.loop_start()
+    app.run(port=5001)
     send_data();
 
     try:
