@@ -3,8 +3,18 @@
 
 #define MQTT_CONFIG "../config/mqttConfig.json"
 
+/**
+ * Checks the connection of the MQTT server 
+ * and tries to reconnect if it is not connected.
+*/
 void checkConnection();
+/**
+ * Sends the water level to the MQTT server.
+*/
 void sendWaterLevel();
+/**
+ * Gets the frequency of the sonar from the MQTT server.
+*/
 int getFrequency();
 
 MqttConnection* connection;

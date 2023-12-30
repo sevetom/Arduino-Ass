@@ -1,6 +1,9 @@
 const timestamps = [];
 const waterLevels = [];
 
+/**
+ * Gets the status of the river monitoring system from the service and updates the dashboard.
+ */
 function getStatus() {
     fetch('http://river-monitoring-service/status')
         .then(response => response.json())
@@ -16,6 +19,9 @@ function getStatus() {
         .catch(error => console.error('Error fetching status:', error));
 }
 
+/**
+ * Controls the valve based on the value of the valve level input.
+ */
 function controlValve() {
     const valveLevelInput = document.getElementById('valve-level-input');
     const valveLevel = valveLevelInput.value;
@@ -39,6 +45,9 @@ function controlValve() {
         .catch(error => console.error('Error controlling the valve:', error));
 }
 
+/**
+ * Updates the chart with the latest water level data.
+ */
 function updateChart() {
     const ctx = document.getElementById('water-level-chart').getContext('2d');
     const myChart = new Chart(ctx, {
@@ -68,4 +77,5 @@ function updateChart() {
     });
 }
 
+// Get the initial status and start polling for updates.
 getStatus();

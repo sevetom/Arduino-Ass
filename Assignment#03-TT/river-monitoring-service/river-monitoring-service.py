@@ -92,6 +92,7 @@ def change_state(state, frequency, opening_level):
     monitoring_frequency = frequency
     valve_opening_level = opening_level
 
+# Callback for when a message is received from the mqtt client
 def on_message(client, userdata, msg):
     global current_state
     global monitoring_frequency
@@ -112,7 +113,8 @@ def on_message(client, userdata, msg):
         change_state(alarm_too_high_critic, F2, valve_critic_high)
         
     send_data()
-    
+
+# Returns the status of the system via an HTTP request
 @app.route("/status", methods=["GET"])
 def get_status():
     global water_level, current_state, valve_opening_level
@@ -122,6 +124,7 @@ def get_status():
         "valve_opening_level": valve_opening_level
     })
 
+# Changes the valve opening level via an HTTP request
 @app.route("/control", methods=["POST"])
 def control_valve():
     global current_state, monitoring_frequency, valve_opening_level
