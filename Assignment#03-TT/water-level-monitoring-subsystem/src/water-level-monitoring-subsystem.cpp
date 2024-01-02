@@ -1,15 +1,13 @@
 #include "Components.h"
 #include "MqttConnection.h"
 
-#define MQTT_CONFIG "../config/mqttConfig.json"
-
 /**
  * Checks the connection of the MQTT server 
  * and tries to reconnect if it is not connected.
 */
 void checkConnection();
 /**
- * Sends the water level to the MQTT server.
+ * Sends the water level to the MQTT server.p
 */
 void sendWaterLevel();
 /**
@@ -23,7 +21,12 @@ Components* hw;
 void setup() {
 	Serial.begin(115200);
 	hw = new Components();
-	connection = new MqttConnection(MQTT_CONFIG);
+	const char* wifi_ssid = "iCereLan-FASTWEB";
+	const char* wifi_password = "iLanVeloce";
+	const char* mqtt_server = "192.168.178.31";
+	int mqtt_port = 1883;
+	const char* mqtt_topic = "water-level";
+	connection = new MqttConnection(wifi_ssid, wifi_password, mqtt_server, mqtt_port, mqtt_topic);
 	connection->connect();
 }
 

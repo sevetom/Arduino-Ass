@@ -3,34 +3,30 @@
 
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <ArduinoJson.h>
-#include <FS.h>
 
 /**
  * Class used to manage the MQTT connection
- * it uses a json file to load the configuration
- * it should have this structure:
- * {
- *     "wifi_ssid": "your-ssid",
- *     "wifi_password": "your-password",
- *     "mqtt_server": "mqtt-server-ip",
- *     "mqtt_username": "your-mqtt-username",
- *     "mqtt_password": "your-mqtt-password",
- *     "mqtt_topic": "your-topic"
- * }
 */
 class MqttConnection {
 private:
     WiFiClient espClient;
-    PubSubClient client(espClient);
-    char* configFile;
+    PubSubClient client;
     byte* messageReceived;
+    const char* wifi_ssid;
+    const char* wifi_password;
+    const char* mqtt_server;
+    int mqtt_port;
+    const char* mqtt_topic;
 public:
     /**
      * Initialize the MQTT connection
-     * @param configFile The path of the configuration file
+     * @param wifi_ssid The SSID of the WiFi network
+     * @param wifi_password The password of the WiFi network
+     * @param mqtt_server The IP address of the MQTT broker
+     * @param mqtt_port The port of the MQTT broker
+     * @param mqtt_topic The topic of the MQTT broker
     */
-    MqttConnection(char* configFile);
+    MqttConnection(const char* wifi_ssid, const char* wifi_password, const char* mqtt_server, int mqtt_port, const char* mqtt_topic);
     /**
      * Connect to the WiFi network
     */
@@ -59,13 +55,10 @@ public:
     void tick();
 private:
     /**
-     * Get the value of a key from the configuration file
-    */
-    String getConfigValue(const char *key);
-    /**
      * Callback used to handle the messages from the MQTT server
     */
-    static void callback(char* topic, byte* payload, unsigned int length);
+    void callback(char* topic, byte* payload, unsigned int length);
+    static void staticCallback(char* topic, byte* payload, unsigned int length, MqttConnection* instance);
 };
 
 #endif

@@ -3,9 +3,23 @@ from flask import Flask, jsonify, request
 import serial
 import time
 import json
+import os
 
 # Function to load MQTT configuration from file
 def load_mqtt_config():
+    # controllo se il file di configurazione esiste
+    if not os.path.exists("../config/mqttConfig.json"):
+        default_config = {
+        "mqtt_server": "mqtt.example.com",
+        "mqtt_port": 1883,
+        "mqtt_topic": "topic/default",
+        "mqtt_username": "user",
+        "mqtt_password": "password"
+        }
+        with open("../config/mqttConfig.json", "w") as config_file:
+            json.dump(default_config, config_file)
+        
+    # leggo il file di configurazione
     with open("../config/mqttConfig.json", "r") as config_file:
         config_data = json.load(config_file)
         return (
@@ -140,7 +154,7 @@ if __name__ == "__main__":
     mqtt_client.on_message = on_message
     mqtt_client.loop_start()
     app.run(port=5001)
-    send_data();
+    send_data()
 
     try:
         while True:

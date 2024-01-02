@@ -5,9 +5,9 @@
 #include "Sonar.h"
 
 #define GREEN_LED 2
-#define RED_LED 3
-#define SONAR_TRIG 4
-#define SONAR_ECHO 5
+#define RED_LED 4
+#define SONAR_TRIG 12
+#define SONAR_ECHO 14
 
 /**
  * Class that contains all the components of the washing machine
