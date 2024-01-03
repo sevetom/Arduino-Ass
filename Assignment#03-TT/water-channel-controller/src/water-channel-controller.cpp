@@ -34,6 +34,7 @@ void printStatus();
 int charToInt(char c);
 
 volatile modality currentModality;
+volatile int currentAngle;
 Components* hw;
 
 void setup() {
@@ -54,8 +55,8 @@ void loop() {
             break;
     }
     if (value >= 0) {
-        int angle = map(value, MIN_PERC, MAX_PERC, hw->gate->MIN_ANGLE, hw->gate->MAX_ANGLE);
-        hw->gate->setAngle(angle);
+        currentAngle = map(value, MIN_PERC, MAX_PERC, hw->gate->getMinAngle(), hw->gate->getMaxAngle());
+        hw->gate->setAngle(currentAngle);
         printStatus();
     }
 }
@@ -79,7 +80,7 @@ int serialRead() {
 void printStatus() {
     char line1[10];
     char line2[10];
-    sprintf(line1, "Angle: %d", angle);
+    sprintf(line1, "Angle: %d", currentAngle);
     sprintf(line2, "Modality: %d", currentModality);
     hw->lcd->printTwoLines(line1, line2);
 }

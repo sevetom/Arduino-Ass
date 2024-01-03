@@ -26,7 +26,7 @@ public:
         this->gate = new Gate(SERVO_PIN);
         this->button = new Button(BUTTON_PIN);
         this->lcd = new LcdDisplay();
-        this->pot = new Potentiometer(A0, this->gate->MIN_ANGLE, this->gate->MAX_ANGLE);
+        this->pot = new Potentiometer(A0, this->gate->getMinAngle(), this->gate->getMaxAngle());
     }
 };
 

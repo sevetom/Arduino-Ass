@@ -10,7 +10,7 @@ int Potentiometer::getValue() {
     return map(analogRead(this->pin), POT_MIN, POT_MAX, min, max);
 }
 
-int Potentiometer::detectChange() {
+bool Potentiometer::detectChange() {
     int value = this->getValue();
     if (value != this->currentValue) {
         this->currentValue = value;

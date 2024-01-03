@@ -5,49 +5,17 @@ import time
 import json
 import os
 
-# Function to load MQTT configuration from file
-def load_mqtt_config():
-    # controllo se il file di configurazione esiste
-    if not os.path.exists("../config/mqttConfig.json"):
-        default_config = {
-        "mqtt_server": "mqtt.example.com",
-        "mqtt_port": 1883,
-        "mqtt_topic": "topic/default",
-        "mqtt_username": "user",
-        "mqtt_password": "password"
-        }
-        with open("../config/mqttConfig.json", "w") as config_file:
-            json.dump(default_config, config_file)
-        
-    # leggo il file di configurazione
-    with open("../config/mqttConfig.json", "r") as config_file:
-        config_data = json.load(config_file)
-        return (
-            config_data["mqtt_server"],
-            config_data["mqtt_port"],
-            config_data["mqtt_topic"],
-            config_data["mqtt_username"],
-            config_data["mqtt_password"]
-        )
-        
-# Function to load Arduino configuration from file
-def load_arduino_config():
-    with open("../config/arduinoConfig.json", "r") as config_file:
-        config_data = json.load(config_file)
-        return (
-            config_data["serial_port"],
-            config_data["baud_rate"]
-        )
-
 # Connects to the mqtt server
-mqtt_server, mqtt_port, mqtt_topic, mqtt_username, mqtt_password = load_mqtt_config()
+mqtt_server = ""
+mqtt_port = 0
+mqtt_topic = ""
 mqtt_client = mqtt.Client()
-mqtt_client.username_pw_set(username=mqtt_username, password=mqtt_password)
 mqtt_client.connect(mqtt_server, mqtt_port, 60)
 mqtt_client.subscribe(mqtt_topic)
 
-# Connects to the arduino
-arduino_serial_port, arduino_serial_baudrate = load_arduino_config()
+# Arduino config
+arduino_serial_port = ""
+arduino_serial_baudrate = "9600"
 
 # Sets up the flask app
 app = Flask(__name__)

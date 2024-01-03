@@ -5,7 +5,7 @@ Gate::Gate(int pin) {
 }
 
 void Gate::setAngle(int angle) {
-  if (angle >= MIN_ANGLE && angle <= MAX_ANGLE) {
+  if (angle >= GATE_MIN_ANGLE && angle <= GATE_MAX_ANGLE) {
     this->servo.attach(this->pin);
     for (int a = this->currentAngle; a != angle; a += (angle > this->currentAngle) ? 1 : -1) {
       this->servo.write(a);
@@ -13,4 +13,12 @@ void Gate::setAngle(int angle) {
     }
     this->servo.detach();
   }
+}
+
+int Gate::getMinAngle() {
+  return GATE_MIN_ANGLE;
+}
+
+int Gate::getMaxAngle() {
+  return GATE_MAX_ANGLE;
 }
