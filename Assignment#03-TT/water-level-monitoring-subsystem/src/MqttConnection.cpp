@@ -62,7 +62,3 @@ void MqttConnection::tick() {
 char* MqttConnection::getTopic() {
     return (char*)this->mqtt_topic_read;
 }
-
-void MqttConnection::setMessage(byte* msg) {
-    this->messageReceived = msg;
-}
