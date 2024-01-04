@@ -10,30 +10,34 @@ void checkConnection();
  * Sends the water level to the MQTT server.p
 */
 void sendWaterLevel();
-/**
- * Gets the frequency of the sonar from the MQTT server.
-*/
-int getFrequency();
+int byteArrayToInt(const unsigned char* byteArray, size_t size);
+
+void callback(char* topic, byte* payload, unsigned int length);
 
 MqttConnection* connection;
 Components* hw;
+int frequency;
 
 void setup() {
 	Serial.begin(115200);
 	hw = new Components();
+	frequency = 0;
 	const char* wifi_ssid = "iCereLan-FASTWEB";
 	const char* wifi_password = "iLanVeloce";
 	const char* mqtt_server = "192.168.178.31";
 	int mqtt_port = 1883;
-	const char* mqtt_topic = "water-level";
-	connection = new MqttConnection(wifi_ssid, wifi_password, mqtt_server, mqtt_port, mqtt_topic);
+	const char* mqtt_topic_read = "monitoring-frequency";
+	const char* mqtt_topic_send = "water-level";
+	connection = new MqttConnection(wifi_ssid, wifi_password, mqtt_server, mqtt_port, mqtt_topic_read, mqtt_topic_send);
+	connection->setCall(callback);
 	connection->connect();
 }
 
 void loop() {
 	checkConnection();
 	sendWaterLevel();
-	delay(getFrequency());
+	delay(frequency);
+	delay(1000);
 }
 
 void checkConnection() {
@@ -53,6 +57,21 @@ void sendWaterLevel() {
 	connection->sendMessagge(message);
 }
 
-int getFrequency() {
-	return atoi((char *)connection->getMessageReceived());
+int byteArrayToInt(const unsigned char* byteArray, size_t size) {
+    int result = 0;
+    for (size_t i = 0; i < size; i++) {
+        if (byteArray[i] >= '0' && byteArray[i] <= '9') {
+            result = result * 10 + (byteArray[i] - '0');
+        }
+    }
+    return result;
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+	if (topic == connection->getTopic()) {
+		Serial.println();
+		Serial.print("valore ricevuto: ");
+		frequency = byteArrayToInt(payload, length);
+		Serial.println(frequency);
+	}
 }

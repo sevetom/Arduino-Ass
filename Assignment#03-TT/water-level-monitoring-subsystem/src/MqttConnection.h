@@ -16,7 +16,8 @@ private:
     const char* wifi_password;
     const char* mqtt_server;
     int mqtt_port;
-    const char* mqtt_topic;
+    const char* mqtt_topic_read;
+    const char* mqtt_topic_send;
 public:
     /**
      * Initialize the MQTT connection
@@ -24,13 +25,18 @@ public:
      * @param wifi_password The password of the WiFi network
      * @param mqtt_server The IP address of the MQTT broker
      * @param mqtt_port The port of the MQTT broker
-     * @param mqtt_topic The topic of the MQTT broker
+     * @param mqtt_topic_read The topic used to read
+     * @param mqtt_topic_send The topic used to write
+     * 
     */
-    MqttConnection(const char* wifi_ssid, const char* wifi_password, const char* mqtt_server, int mqtt_port, const char* mqtt_topic);
+    MqttConnection(const char* wifi_ssid, const char* wifi_password, const char* mqtt_server, int mqtt_port, const char* mqtt_topic_read, 
+            const char* mqtt_topic_send);
     /**
      * Connect to the WiFi network
     */
     void connect();
+
+    void setCall(std::function<void (char *, uint8_t *, unsigned int)> callback);
     /**
      * Reconnect to the MQTT server
     */
@@ -53,12 +59,8 @@ public:
      * Tick the MQTT connection
     */
     void tick();
-private:
-    /**
-     * Callback used to handle the messages from the MQTT server
-    */
-    void callback(char* topic, byte* payload, unsigned int length);
-    static void staticCallback(char* topic, byte* payload, unsigned int length, MqttConnection* instance);
+
+    char* getTopic();
 };
 
 #endif

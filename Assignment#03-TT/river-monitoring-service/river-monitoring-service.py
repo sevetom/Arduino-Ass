@@ -2,19 +2,18 @@ import paho.mqtt.client as mqtt
 from flask import Flask, jsonify, request
 import serial
 import time
-import json
-import os
 
 # Connects to the mqtt server
-mqtt_server = ""
-mqtt_port = 0
-mqtt_topic = ""
+mqtt_server = "192.168.178.31"
+mqtt_port = 1883
+mqtt_topic_read = "water-level"
+mqtt_topic_send = "monitoring-frequency"
 mqtt_client = mqtt.Client()
 mqtt_client.connect(mqtt_server, mqtt_port, 60)
-mqtt_client.subscribe(mqtt_topic)
+mqtt_client.subscribe(mqtt_topic_read)
 
 # Arduino config
-arduino_serial_port = ""
+arduino_serial_port = "COM3"
 arduino_serial_baudrate = "9600"
 
 # Sets up the flask app
@@ -61,8 +60,9 @@ def send_data():
     with serial.Serial(arduino_serial_port, arduino_serial_baudrate) as ser:
         ser.write(f"{valve_opening_level}\n".encode())
 
-    mqtt_payload = json.dumps({"frequency": monitoring_frequency})
-    mqtt_client.publish(mqtt_topic, mqtt_payload)
+    mqtt_payload = f"{monitoring_frequency}"
+    print(f"Sending: {mqtt_payload}")
+    mqtt_client.publish(mqtt_topic_send, mqtt_payload)
 
 # Changes the values dependening on the state
 def change_state(state, frequency, opening_level):
@@ -81,7 +81,10 @@ def on_message(client, userdata, msg):
     global valve_opening_level
     global water_level
 
-    water_level = int(msg.payload.decode())
+    water_level = str(msg.payload.decode("utf-8"))
+    print(f"Water Level str: {water_level}")
+    water_level = int(water_level)
+    print(f"Water Level int: {water_level}")
 
     if WL1 <= water_level <= WL2:
         change_state(normal_state, F1, valve_normal)

@@ -1,12 +1,13 @@
 #include "mqttConnection.h"
 
 MqttConnection::MqttConnection(const char* wifi_ssid, const char* wifi_password, const char* mqtt_server, 
-        int mqtt_port, const char* mqtt_topic): espClient(), client(espClient) {
+        int mqtt_port, const char* mqtt_topic_read, const char* mqtt_topic_send): espClient(), client(espClient) {
     this->wifi_ssid = wifi_ssid;
     this->wifi_password = wifi_password;
     this->mqtt_server = mqtt_server;
     this->mqtt_port = mqtt_port;
-    this->mqtt_topic = mqtt_topic;
+    this->mqtt_topic_read = mqtt_topic_read;
+    this->mqtt_topic_send = mqtt_topic_send;
 }
 
 void MqttConnection::connect() {
@@ -19,10 +20,11 @@ void MqttConnection::connect() {
     Serial.println("");
     Serial.print("Connected to WiFi network with IP Address: ");
     Serial.println(WiFi.localIP());
-    client.setServer(this->mqtt_server, this->mqtt_port);
-    client.setCallback([this](char* topic, byte* payload, unsigned int length) { 
-        staticCallback(topic, payload, length, this);
-    });
+    this->client.setServer(this->mqtt_server, this->mqtt_port);
+}
+
+void MqttConnection::setCall(std::function<void (char *, uint8_t *, unsigned int)> callback) {
+    this->client.setCallback(callback);
 }
 
 void MqttConnection::reconnectServer() {
@@ -30,7 +32,7 @@ void MqttConnection::reconnectServer() {
         Serial.println("Attempting MQTT connection...");
         if (this->client.connect("ESP32Client")) {
             Serial.println("Connected to MQTT");
-            this->client.subscribe(this->mqtt_topic);
+            this->client.subscribe(this->mqtt_topic_read);
         } else {
             Serial.print("Failed, rc=");
             Serial.print(this->client.state());
@@ -41,7 +43,8 @@ void MqttConnection::reconnectServer() {
 }
 
 void MqttConnection::sendMessagge(char* message) {
-    this->client.publish(this->mqtt_topic, message);
+    Serial.println("Messaggio inviato: "+ String(message));
+    this->client.publish(this->mqtt_topic_send, message);
 }
 
 bool MqttConnection::getStatus() {
@@ -56,12 +59,10 @@ void MqttConnection::tick() {
     this->client.loop();
 }
 
-void MqttConnection::callback(char* topic, byte* payload, unsigned int length) {
-    if (topic == this->mqtt_topic) {
-        this->messageReceived = payload;
-    }
+char* MqttConnection::getTopic() {
+    return (char*)this->mqtt_topic_read;
 }
 
-void MqttConnection::staticCallback(char* topic, byte* payload, unsigned int length, MqttConnection* instance) {
-    instance->callback(topic, payload, length);
+void MqttConnection::setMessage(byte* msg) {
+    this->messageReceived = msg;
 }
