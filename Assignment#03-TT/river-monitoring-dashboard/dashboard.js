@@ -1,18 +1,22 @@
 const timestamps = [];
 const waterLevels = [];
+myChart = null;
 
 /**
  * Gets the status of the river monitoring system from the service and updates the dashboard.
  */
 function getStatus() {
-    fetch('http://river-monitoring-service/status')
+    fetch('http://127.0.0.1:5001/status')
         .then(response => response.json())
         .then(data => {
-            document.getElementById('water-level').innerText = 'Water Level: ' + data.water_level;
             document.getElementById('system-state').innerText = 'System State: ' + data.system_state;
             document.getElementById('valve-opening').innerText = 'Valve Opening Level: ' + data.valve_opening_level + '%';
             const timestamp = new Date().toLocaleTimeString();
             timestamps.push(timestamp);
+            if (waterLevels.length >= 60) {
+                timestamps.shift();
+                waterLevels.shift();
+            }
             waterLevels.push(data.water_level);
             updateChart();
         })
@@ -25,7 +29,7 @@ function getStatus() {
 function controlValve() {
     const valveLevelInput = document.getElementById('valve-level-input');
     const valveLevel = valveLevelInput.value;
-    fetch('http://river-monitoring-service/control', {
+    fetch('http://127.0.0.1:5001/control', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -50,32 +54,41 @@ function controlValve() {
  */
 function updateChart() {
     const ctx = document.getElementById('water-level-chart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: timestamps,
-            datasets: [{
-                label: 'Water Level Over Time',
-                data: waterLevels,
-                borderColor: 'blue',
-                borderWidth: 1,
-                fill: false,
-            }],
-        },
-        options: {
-            scales: {
-                x: [{
-                    type: 'linear',
-                    position: 'bottom',
-                }],
-                y: [{
-                    type: 'linear',
-                    position: 'left',
+
+    if (!myChart) {
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Water Level Over Time',
+                    data: waterLevels,
+                    borderColor: 'blue',
+                    borderWidth: 1,
+                    fill: false,
                 }],
             },
-        },
-    });
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom',
+                    }],
+                    yAxes: [{
+                        type: 'linear',
+                        position: 'left',
+                    }],
+                },
+            },
+        });
+    } else {
+        myChart.data.labels = timestamps;
+        myChart.data.datasets[0].data = waterLevels;
+        myChart.update();
+    }
 }
 
 // Get the initial status and start polling for updates.
 getStatus();
+
+setInterval(getStatus, 1000);

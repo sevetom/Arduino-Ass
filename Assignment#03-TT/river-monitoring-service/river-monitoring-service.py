@@ -1,7 +1,9 @@
 import paho.mqtt.client as mqtt
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import serial
 import time
+import threading
 
 # Connects to the mqtt server
 mqtt_server = "192.168.178.31"
@@ -15,9 +17,11 @@ mqtt_client.subscribe(mqtt_topic_read)
 # Arduino config
 arduino_serial_port = "COM3"
 arduino_serial_baudrate = "9600"
+ser = serial.Serial(arduino_serial_port, arduino_serial_baudrate)
 
 # Sets up the flask app
 app = Flask(__name__)
+CORS(app)
 
 # Water Level Thresholds
 WL1 = 10
@@ -42,9 +46,12 @@ alarm_too_low = "ALARM-TOO-LOW"
 pre_alarm_too_high = "PRE-ALARM-TOO-HIGH"
 alarm_too_high = "ALARM-TOO-HIGH"
 alarm_too_high_critic = "ALARM-TOO-HIGH-CRITIC"
+automatic_modality = 0
+manual_modality = 1 
 
 # Initial state
-current_state = "NORMAL"
+current_modality = normal_state
+system_modality = automatic_modality
 # Initial monitoring frequency
 monitoring_frequency = F1
 # Initial valve opening level
@@ -57,12 +64,22 @@ def send_data():
     global monitoring_frequency
     global valve_opening_level
 
-    with serial.Serial(arduino_serial_port, arduino_serial_baudrate) as ser:
-        ser.write(f"{valve_opening_level}\n".encode())
+    ser.write(f"{valve_opening_level}\n".encode())
 
     mqtt_payload = f"{monitoring_frequency}"
     print(f"Sending: {mqtt_payload}")
     mqtt_client.publish(mqtt_topic_send, mqtt_payload)
+
+def read_serial():
+    global system_modality
+    while True:
+        if ser.in_waiting:
+            packet = ser.readline().decode("utf").rstrip("\n")
+            print(packet)
+            if not packet or not packet.startswith("Mondality: ") or packet == system_modality:
+                continue
+            system_modality = float(packet.split(" ")[2])
+            print("changed: " + system_modality)
 
 # Changes the values dependening on the state
 def change_state(state, frequency, opening_level):
@@ -76,6 +93,9 @@ def change_state(state, frequency, opening_level):
 
 # Callback for when a message is received from the mqtt client
 def on_message(client, userdata, msg):
+    if (msg.topic != mqtt_topic_read or system_modality == manual_modality):
+        return
+
     global current_state
     global monitoring_frequency
     global valve_opening_level
@@ -124,11 +144,13 @@ def control_valve():
 if __name__ == "__main__":
     mqtt_client.on_message = on_message
     mqtt_client.loop_start()
-    app.run(port=5001)
-    send_data()
-
+    print("MQTT Client started")
+    t1 = threading.Thread(target=app.run, kwargs={'port': 5001, 'debug': False})
+    t1.start()
+    print("Flask App started")
     try:
         while True:
+            read_serial()
             time.sleep(1)
     except KeyboardInterrupt:
         mqtt_client.disconnect()

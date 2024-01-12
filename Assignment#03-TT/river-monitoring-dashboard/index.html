@@ -9,7 +9,6 @@
         <body>
             <h1>River Monitoring Dashboard</h1>
             <div id="status-container">
-                <p id="water-level">Water Level: Loading...</p>
                 <p id="system-state">System State: Loading...</p>
                 <p id="valve-opening">Valve Opening Level: Loading...</p>
             </div>
@@ -18,7 +17,7 @@
                 <input type="number" id="valve-level-input" name="valve_level" min="0" max="100" required>
                 <button type="button" onclick="controlValve()">Control Valve</button>
             </form>
-            <canvas id="water-level-chart" width="400" height="200"></canvas>
+            <canvas id="water-level-chart" style="width:30%;height:50%"></canvas>
         </body>
     </html>
 
