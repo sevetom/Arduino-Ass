@@ -21,7 +21,7 @@ void changeModality();
  * @brief Read the serial port and return the value if it is valid
  * @return The value read from the serial port or -1 if it is not valid
 */
-int serialRead();
+int serialReadInt();
 /**
  * @brief Print the status of the system
 */
@@ -33,6 +33,7 @@ Components* hw;
 
 void setup() {
     Serial.begin(9600);
+    Serial.setTimeout(4);
     Components* hw = new Components();
     currentModality = AUTOMATIC;
     currentAngle = 0;
@@ -43,21 +44,24 @@ void setup() {
 
 void loop() {
     int value = INVALID;
-    noInterrupts();
+    //noInterrupts();
     switch (currentModality) {
         case AUTOMATIC:
-            value = serialRead();
+            value = serialReadInt();
             break;
         case MANUAL:
+            Serial.println("AAAAAAAA");
+            delay(100);
             value = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
             break;
     }
-    interrupts();
+    //interrupts();
     if (value >= 0) {
         Serial.println("Value: " + String(value));
         delay(100);
         currentAngle = map(value, MIN_PERC, MAX_PERC, hw->gate->getMinAngle(), hw->gate->getMaxAngle());
-        Serial.println("Angle: " + String(currentAngle));
+        Serial.print("Angle: ");
+        Serial.println(currentAngle);
         delay(100);
         //hw->gate->setAngle(currentAngle);
         //printStatus();
@@ -72,26 +76,15 @@ void changeModality() {
     }
 }
 
-int serialRead() {
-    const int BUFFER_SIZE = 10;
-    char buffer[BUFFER_SIZE];
-    int index = 0;
-    int length = 0;
-    while (Serial.available() > 0 && index < BUFFER_SIZE - 1) {
-        if (length == 0) {
-            char tmp = Serial.read();
-            length = tmp - '0';
-            Serial.println("Length: " + String(length));
+int serialReadInt() {
+    Serial.println("Serial read int");
+    if (Serial.available()) {
+        int data = Serial.parseInt();
+        Serial.println("Data: " + String(data));
+        while (Serial.available()) {
+            Serial.read();
         }
-        char nextChar = Serial.read();
-        buffer[index] = nextChar;
-        index++;
-        Serial.println("Index: " + String(index));
-        if (index == length) {
-            buffer[index] = '\0';
-            Serial.println("Buffer: " + String(buffer));
-            return atoi(buffer);
-        }
+        return data;
     }
     return INVALID;
 }
