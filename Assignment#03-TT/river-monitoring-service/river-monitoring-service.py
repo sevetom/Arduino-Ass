@@ -50,7 +50,7 @@ automatic_modality = 0
 manual_modality = 1 
 
 # Initial state
-current_modality = normal_state
+current_mode = normal_state
 system_modality = automatic_modality
 # Initial monitoring frequency
 monitoring_frequency = F1
@@ -90,6 +90,12 @@ def change_state(state, frequency, opening_level):
     current_state = state
     monitoring_frequency = frequency
     valve_opening_level = opening_level
+    
+def change_modality():
+    global system_modality
+    system_modality = manual_modality if system_modality == automatic_modality else automatic_modality
+    modality_change = 101;
+    ser.write(f"{modality_change}\n".encode())
 
 # Callback for when a message is received from the mqtt client
 def on_message(client, userdata, msg):
@@ -122,21 +128,26 @@ def on_message(client, userdata, msg):
 # Returns the status of the system via an HTTP request
 @app.route("/status", methods=["GET"])
 def get_status():
-    global water_level, current_state, valve_opening_level
+    global water_level, current_state, valve_opening_level, system_modality
+    mod = 'automatic' if system_modality == automatic_modality else 'manual'
     return jsonify({
         "water_level": water_level,
         "system_state": current_state,
-        "valve_opening_level": valve_opening_level
+        "valve_opening_level": valve_opening_level,
+        "system_modality": mod
     })
 
 # Changes the valve opening level via an HTTP request
 @app.route("/control", methods=["POST"])
 def control_valve():
-    global current_state, monitoring_frequency, valve_opening_level
+    global current_state, monitoring_frequency, valve_opening_level, system_modality
     try:
+        if (system_modality == automatic_modality):
         # Ottieni il livello di apertura desiderato dalla richiesta
-        valve_level = int(request.form.get("valve_level"))
-        change_state(current_state, monitoring_frequency, valve_level)
+            valve_level = int(request.form.get("valve_level"))
+            change_state(current_state, monitoring_frequency, valve_level)
+        change_modality()
+        send_data()
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500

@@ -11,6 +11,13 @@ function getStatus() {
         .then(data => {
             document.getElementById('system-state').innerText = 'System State: ' + data.system_state;
             document.getElementById('valve-opening').innerText = 'Valve Opening Level: ' + data.valve_opening_level + '%';
+            if (data.system_modality == 'automatic') {
+                document.getElementById('automatic-button').classList.add('active');
+                document.getElementById('manual-button').classList.remove('active');
+            } else {
+                document.getElementById('automatic-button').classList.remove('active');
+                document.getElementById('manual-button').classList.add('active');
+            }
             const timestamp = new Date().toLocaleTimeString();
             timestamps.push(timestamp);
             if (waterLevels.length >= 60) {
