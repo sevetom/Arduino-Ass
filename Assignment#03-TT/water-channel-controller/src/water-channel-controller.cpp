@@ -23,6 +23,14 @@ void changeModality();
 */
 int serialRead();
 /**
+ * @brief Read a line from the serial port
+ * @param readch The character read from the serial port
+ * @param buffer The buffer where the line will be stored
+ * @param len The length of the buffer
+ * @return The length of the line read
+*/
+int readline(int readch, char *buffer, int len);
+/**
  * @brief Print the status of the system
 */
 void printStatus();
@@ -60,7 +68,7 @@ void loop() {
         Serial.println("Angle: " + String(currentAngle));
         delay(100);
         //hw->gate->setAngle(currentAngle);
-        //printStatus();
+        printStatus();
         delay(100);
     }
 }
@@ -73,27 +81,33 @@ void changeModality() {
 }
 
 int serialRead() {
-    const int BUFFER_SIZE = 10;
-    char buffer[BUFFER_SIZE];
-    int index = 0;
-    int length = 0;
-    while (Serial.available() > 0 && index < BUFFER_SIZE - 1) {
-        if (length == 0) {
-            char tmp = Serial.read();
-            length = tmp - '0';
-            Serial.println("Length: " + String(length));
-        }
-        char nextChar = Serial.read();
-        buffer[index] = nextChar;
-        index++;
-        Serial.println("Index: " + String(index));
-        if (index == length) {
-            buffer[index] = '\0';
-            Serial.println("Buffer: " + String(buffer));
-            return atoi(buffer);
+    char buf[3];
+    if (readline(Serial.read(), buf, 3) > 0) {
+        return atoi(buf);
+    } else {
+        return INVALID;
+    }
+}
+
+int readline(int readch, char *buffer, int len) {
+    static int pos = 0;
+    int rpos;
+    if (readch > 0) {
+        switch (readch) {
+            case '\r':
+                break;
+            case '\n':
+                rpos = pos;
+                pos = 0;
+                return rpos;
+            default:
+                if (pos < len-1) {
+                    buffer[pos++] = readch;
+                    buffer[pos] = 0;
+                }
         }
     }
-    return INVALID;
+    return 0;
 }
 
 void printStatus() {
