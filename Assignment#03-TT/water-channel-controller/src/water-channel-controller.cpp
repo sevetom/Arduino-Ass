@@ -64,7 +64,7 @@ void loop() {
         Serial.println(currentAngle);
         delay(100);
         //hw->gate->setAngle(currentAngle);
-        //printStatus();
+        printStatus();
         delay(100);
     }
 }
@@ -86,7 +86,7 @@ int serialReadInt() {
         }
         return data;
     }
-    return INVALID;
+    return 0;
 }
 
 void printStatus() {
