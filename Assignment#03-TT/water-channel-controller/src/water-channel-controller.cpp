@@ -56,6 +56,9 @@ void loop() {
             break;
     }
     //interrupts();
+    if (value > 100) {
+        changeModality();
+    }
     if (value >= 0) {
         //Serial.println("Value: " + String(value));
         delay(100);
