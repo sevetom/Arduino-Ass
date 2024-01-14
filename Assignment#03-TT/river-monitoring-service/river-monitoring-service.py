@@ -65,6 +65,7 @@ def send_data():
     global valve_opening_level
 
     ser.write(f"{valve_opening_level}\n".encode())
+    print(f"Sending arduino: {valve_opening_level}")
 
     mqtt_payload = f"{monitoring_frequency}"
     print(f"Sending: {mqtt_payload}")
@@ -94,7 +95,7 @@ def change_state(state, frequency, opening_level):
 def change_modality():
     global system_modality
     system_modality = manual_modality if system_modality == automatic_modality else automatic_modality
-    modality_change = 101;
+    modality_change = 101
     ser.write(f"{modality_change}\n".encode())
 
 # Callback for when a message is received from the mqtt client
