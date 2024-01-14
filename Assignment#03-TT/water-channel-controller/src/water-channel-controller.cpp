@@ -57,15 +57,15 @@ void loop() {
     }
     //interrupts();
     if (value >= 0) {
-        Serial.println("Value: " + String(value));
+        //Serial.println("Value: " + String(value));
         delay(100);
         currentAngle = map(value, MIN_PERC, MAX_PERC, hw->gate->getMinAngle(), hw->gate->getMaxAngle());
-        Serial.print("Angle: ");
-        Serial.println(currentAngle);
-        delay(100);
+        //Serial.print("Angle: ");
+        //Serial.println(currentAngle);
+        //delay(100);
         //hw->gate->setAngle(currentAngle);
-        printStatus();
-        delay(100);
+        //printStatus();
+        //delay(100);
     }
 }
 
@@ -77,13 +77,10 @@ void changeModality() {
 }
 
 int serialReadInt() {
-    Serial.println("Serial read int");
+    //Serial.println("Serial read int");
     if (Serial.available()) {
         int data = Serial.parseInt();
         Serial.println("Data: " + String(data));
-        while (Serial.available()) {
-            Serial.read();
-        }
         return data;
     }
     return 0;
