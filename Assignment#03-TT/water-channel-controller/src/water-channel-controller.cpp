@@ -4,6 +4,7 @@
 #define MIN_PERC 0
 #define MAX_PERC 100
 #define INVALID -1
+#define MODALITY_CHANGE 101
 
 /**
  * @brief The modality of the system
@@ -17,12 +18,18 @@ typedef enum {
  * @brief Change the modality of the system
 */
 void changeModality();
+
 /**
  * @brief Read the serial port and return the value if it is valid
  * @return The value read from the serial port or -1 if it is not valid
 */
 int serialReadInt();
+
+/**
+ * @brief Move the servo to the current angle
+*/
 void moveServo();
+
 /**
  * @brief Print the status of the system
 */
@@ -47,24 +54,30 @@ void setup() {
 }
 
 void loop() {
+    // value starts as not needing an update
     int value = INVALID;
-    switch (currentModality) {
-        case AUTOMATIC:
-            value = serialReadInt();
-            break;
-        case MANUAL:
-            Serial.println("AAAAAAAA");
-            delay(100);
-            value = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
-            break;
+    // if the system is in manual mode then reads for a change in the potentiometer
+    if (currentModality == MANUAL) {
+        value = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
     }
-    if (value > 100) {
-        changeModality();
+    /** if the values is still invalid then there could be two cases:
+     *  1. the system is in automatic mode so we need the water level
+     *  2. the system is in manual mode and the potentiometer has not changed
+     *     but we still need to check for a manual change made from the frontend */
+    if (value == INVALID) {
+        value = serialReadInt();
     }
-    if (value >= 0) {
+    // it's possible that it's needed to switch to manual mode
+    if (value == MODALITY_CHANGE) {
+        currentModality = MANUAL;
+    }
+    // once everything is done we can update the angle if needed
+    if (value >= MIN_PERC && value <= MAX_PERC) {
         currentAngle = map(value, MIN_PERC, MAX_PERC, hw->servo->getMinAngle(), hw->servo->getMaxAngle());
-        //moveServo();
-        //printStatus();
+        if (currentAngle != lastAngle) {
+            // moveServo();
+            // printStatus();
+        }
     }
 }
 
@@ -85,25 +98,23 @@ int serialReadInt() {
 }
 
 void moveServo() {
-    if (currentAngle != lastAngle) {
-        Serial.println("Current angle: " + String(currentAngle) + " Last angle: " + String(lastAngle));
-        int delta = 0;
-        if (currentAngle > lastAngle) {
-            delta = currentAngle - lastAngle;
-            hw->servo->setPosition(80);
-            delay(1000);
-        } else {
-            delta = lastAngle - currentAngle;
-            hw->servo->setPosition(100);
-            delay(1000);
-        }
-        Serial.println("Delta: " + String(delta));
-        delay(delta);
-        hw->servo->setPosition(90);
+    Serial.println("Current angle: " + String(currentAngle) + " Last angle: " + String(lastAngle));
+    int delta = 0;
+    if (currentAngle > lastAngle) {
+        delta = currentAngle - lastAngle;
+        hw->servo->setPosition(80);
         delay(1000);
-        lastAngle = currentAngle;
-        Serial.println("Last angle: " + String(lastAngle));
+    } else {
+        delta = lastAngle - currentAngle;
+        hw->servo->setPosition(100);
+        delay(1000);
     }
+    Serial.println("Delta: " + String(delta));
+    delay(delta);
+    hw->servo->setPosition(90);
+    delay(1000);
+    lastAngle = currentAngle;
+    Serial.println("Last angle: " + String(lastAngle));
 }
 
 void printStatus() {
