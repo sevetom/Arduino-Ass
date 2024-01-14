@@ -32,3 +32,7 @@ void LcdDisplay::printText(const char* text, int row, int line) {
 void LcdDisplay::clear() {
   this->lcd.clear();
 }
+
+void LcdDisplay::printInt(int value, int row, int line) {
+  this->lcd.print(value);
+}

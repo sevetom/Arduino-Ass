@@ -32,6 +32,7 @@ public:
      * @param line The line to print the text on
     */
     void printText(const char* text, int row, int line);
+    void printInt(int value, int row, int line);
     /**
      * Clears the LCD display
     */
