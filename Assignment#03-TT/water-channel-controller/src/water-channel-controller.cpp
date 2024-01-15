@@ -48,9 +48,6 @@ void setup() {
     currentAngle = 0;
     lastAngle = 0;
     hw->button->setInterrupt(changeModality, true);
-    hw->servo->on();
-    hw->lcd->printText("Angle: ", 0, 0);
-    hw->lcd->printText("Modality: ", 0, 1);
 }
 
 void loop() {
@@ -100,6 +97,7 @@ int serialReadInt() {
 void moveServo() {
     Serial.println("Current angle: " + String(currentAngle) + " Last angle: " + String(lastAngle));
     int delta = 0;
+    hw->servo->on();
     if (currentAngle > lastAngle) {
         delta = currentAngle - lastAngle;
         hw->servo->setPosition(80);
@@ -111,13 +109,12 @@ void moveServo() {
     }
     Serial.println("Delta: " + String(delta));
     delay(delta);
-    hw->servo->setPosition(90);
-    delay(1000);
+    hw->servo->off();
     lastAngle = currentAngle;
     Serial.println("Last angle: " + String(lastAngle));
 }
 
 void printStatus() {
-    hw->lcd->printInt(currentAngle, 7, 0);
-    hw->lcd->printText((currentModality == AUTOMATIC) ? "Automatic" : "Manual", 10, 1);
+    hw->lcd->printInt(currentAngle, 0, 0);
+    hw->lcd->printText((currentModality == AUTOMATIC) ? "Automatic" : "Manual", 0, 1);
 }
