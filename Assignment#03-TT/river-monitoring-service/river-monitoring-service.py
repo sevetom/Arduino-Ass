@@ -29,7 +29,7 @@ WL2 = 20
 WL3 = 30
 WL4 = 40
 
-# Monitoring Frequencies in seconds
+# Monitoring Frequencies in  milliseconds
 F1 = 60
 F2 = 30
 
