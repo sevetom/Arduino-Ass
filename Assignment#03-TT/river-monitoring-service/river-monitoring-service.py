@@ -5,6 +5,11 @@ import serial
 import time
 import threading
 
+'''
+@author tommaso.ceredi@studio.unibo.it
+@author tommaso.severi2@studio.unibo.it
+'''
+
 # Connects to the mqtt server
 mqtt_server = "192.168.178.31"
 mqtt_port = 1883
@@ -30,8 +35,8 @@ WL3 = 30
 WL4 = 40
 
 # Monitoring Frequencies in seconds
-F1 = 60
-F2 = 30
+F1 = 2000
+F2 = 4000
 
 # Valve Opening Levels
 valve_normal = 25

@@ -1,12 +1,12 @@
 #ifndef __COMPONENTS__
 #define __COMPONENTS__
 
-#include "ServoMotor.h"
+#include "Valve.h"
 #include "Button.h"
 #include "LcdDisplay.h"
 #include "Potentiometer.h"
 
-#define SERVO_PIN 9
+#define VALVE_PIN 9
 #define BUTTON_PIN 2
 #define POT_PIN A0
 
@@ -15,7 +15,7 @@
 */
 class Components {
 public:
-    ServoMotor* servo;
+    Valve* valve;
     Button* button;
     LcdDisplay* lcd;
     Potentiometer* pot;
@@ -24,10 +24,10 @@ public:
      * Constructor that initializes all the components
      */
     Components() {
-        this->servo = new ServoMotor(SERVO_PIN);
+        this->valve = new Valve(VALVE_PIN);
         this->button = new Button(BUTTON_PIN);
         this->lcd = new LcdDisplay();
-        this->pot = new Potentiometer(POT_PIN, this->servo->getMinAngle(), this->servo->getMaxAngle());
+        this->pot = new Potentiometer(POT_PIN, this->valve->getMinAngle(), this->valve->getMaxAngle());
     }
 };
 

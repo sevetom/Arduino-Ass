@@ -1,3 +1,8 @@
+/**
+* @author tommaso.ceredi@studio.unibo.it
+* @author tommaso.severi2@studio.unibo.it
+*/
+
 const timestamps = [];
 const waterLevels = [];
 myChart = null;

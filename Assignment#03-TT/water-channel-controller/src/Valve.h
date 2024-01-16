@@ -1,15 +1,15 @@
-#ifndef __SERVO_MOTOR_IMPL__
-#define __SERVO_MOTOR_IMPL__
+#ifndef __VALVE_H__
+#define __VALVE_H__
 
 #include <Servo.h>
 
 #define MIN_ANGLE 0
 #define MAX_ANGLE 180
 
-class ServoMotor {
+class Valve {
 
 public:
-  ServoMotor(int pin);
+  Valve(int pin);
 
   void on();
   void setPosition(int angle);

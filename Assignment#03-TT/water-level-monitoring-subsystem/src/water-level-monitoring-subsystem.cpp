@@ -1,6 +1,13 @@
 #include "Components.h"
 #include "MqttConnection.h"
 
+#define CHANNEL_HEIGHT 150
+
+/**
+* @author tommaso.ceredi@studio.unibo.it
+* @author tommaso.severi2@studio.unibo.it
+*/
+
 /**
  * Checks the connection of the MQTT server 
  * and tries to reconnect if it is not connected.
@@ -10,8 +17,14 @@ void checkConnection();
  * Sends the water level to the MQTT server.p
 */
 void sendWaterLevel();
+/**
+ * @brief Converts a byte array to an integer.
+ */
 int byteArrayToInt(const unsigned char* byteArray, size_t size);
 
+/**
+ * @brief Callback function for the MQTT connection.
+ */
 void callback(char* topic, byte* payload, unsigned int length);
 
 MqttConnection* connection;
@@ -21,6 +34,8 @@ int frequency;
 void setup() {
 	Serial.begin(115200);
 	hw = new Components();
+	hw->greenLed->off();
+	hw->redLed->on();
 	frequency = 0;
 	const char* wifi_ssid = "iCereLan-FASTWEB";
 	const char* wifi_password = "iLanVeloce";
@@ -31,6 +46,8 @@ void setup() {
 	connection = new MqttConnection(wifi_ssid, wifi_password, mqtt_server, mqtt_port, mqtt_topic_read, mqtt_topic_send);
 	connection->setCall(callback);
 	connection->connect();
+	hw->greenLed->on();
+	hw->redLed->off();
 }
 
 void loop() {
@@ -53,7 +70,8 @@ void checkConnection() {
 
 void sendWaterLevel() {
 	char message[10];
-	sprintf(message, "%d", hw->sonar->getDistance());
+	int waterLevel = CHANNEL_HEIGHT - hw->sonar->getDistance();
+	sprintf(message, "%d", waterLevel);
 	connection->sendMessagge(message);
 }
 

@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include <Components.h>
 
+/**
+* @author tommaso.ceredi@studio.unibo.it
+* @author tommaso.severi2@studio.unibo.it
+*/
+
 #define MIN_PERC 0
 #define MAX_PERC 100
 #define INVALID -1
@@ -26,9 +31,9 @@ void changeModality();
 int serialReadInt();
 
 /**
- * @brief Move the servo to the current angle
+ * @brief Move the valve to the current angle
 */
-void moveServo();
+void moveValve();
 
 /**
  * @brief Print the status of the system
@@ -48,6 +53,9 @@ void setup() {
     currentAngle = 0;
     lastAngle = 0;
     hw->button->setInterrupt(changeModality, true);
+    hw->lcd->printText("Angle: ", 0, 0);
+    hw->lcd->printText("Mod: ", 0, 1);
+    hw->valve->on();
 }
 
 void loop() {
@@ -70,10 +78,10 @@ void loop() {
     }
     // once everything is done we can update the angle if needed
     if (value >= MIN_PERC && value <= MAX_PERC) {
-        currentAngle = map(value, MIN_PERC, MAX_PERC, hw->servo->getMinAngle(), hw->servo->getMaxAngle());
+        currentAngle = map(value, MIN_PERC, MAX_PERC, hw->valve->getMinAngle(), hw->valve->getMaxAngle());
         if (currentAngle != lastAngle) {
-            // moveServo();
-            // printStatus();
+            moveValve();
+            printStatus();
         }
     }
 }
@@ -81,7 +89,9 @@ void loop() {
 void changeModality() {
     if (hw->button->avoidBouncing()) {
         currentModality = (currentModality == AUTOMATIC) ? MANUAL : AUTOMATIC;
-        Serial.println("Modality: " + String(currentModality));
+        Serial.println("Current modality: " + String(currentModality));
+        delay(100);
+        printStatus();
     }
 }
 
@@ -94,28 +104,28 @@ int serialReadInt() {
     return INVALID;
 }
 
-void moveServo() {
+void moveValve() {
     Serial.println("Current angle: " + String(currentAngle) + " Last angle: " + String(lastAngle));
     int delta = 0;
-    hw->servo->on();
     if (currentAngle > lastAngle) {
         delta = currentAngle - lastAngle;
-        hw->servo->setPosition(80);
-        delay(1000);
+        hw->valve->setPosition(40);
     } else {
         delta = lastAngle - currentAngle;
-        hw->servo->setPosition(100);
-        delay(1000);
+        hw->valve->setPosition(140);
     }
     Serial.println("Delta: " + String(delta));
-    delay(delta);
-    hw->servo->off();
+    delay(delta*10);
+    hw->valve->setPosition(90);
     lastAngle = currentAngle;
     Serial.println("Last angle: " + String(lastAngle));
 }
 
 void printStatus() {
     Serial.println("Current angle: " + String(currentAngle) + " Modality: " + String(currentModality));
+    hw->lcd->clear();
+    hw->lcd->printText("Angle: ", 0, 0);
+    hw->lcd->printText("Mod: ", 0, 1);
     hw->lcd->printInt(currentAngle, 7, 0);
-    hw->lcd->printText((currentModality == AUTOMATIC) ? "Automatic" : "Manual", 10, 1);
+    hw->lcd->printText((currentModality == AUTOMATIC) ? "Automatic" : "Manual", 5, 1);
 }
