@@ -11,12 +11,12 @@
             <div id="status-container">
                 <p id="system-state">System State: Loading...</p>
                 <p id="valve-opening">Valve Opening Level: Loading...</p>
+                <p id="system-modality">System Modality: Loading:...</p>
             </div>
             <form id="control-form">
                 <label for="valve-level-input">Set Valve Opening Level (0-100): </label>
                 <input type="number" id="valve-level-input" name="valve_level" min="0" max="100" required>
                 <button id="manual-button" type="button" onclick="controlValve()">Control Valve</button>
-                <button id="automatic-button" type="button" onclick="controlValve()">Set Automatic mode</button>
             </form>
             <canvas id="water-level-chart" style="width:30%;height:50%"></canvas>
         </body>

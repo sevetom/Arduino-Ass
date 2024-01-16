@@ -46,8 +46,9 @@ alarm_too_low = "ALARM-TOO-LOW"
 pre_alarm_too_high = "PRE-ALARM-TOO-HIGH"
 alarm_too_high = "ALARM-TOO-HIGH"
 alarm_too_high_critic = "ALARM-TOO-HIGH-CRITIC"
-automatic_modality = 0
-manual_modality = 1 
+automatic_modality = "automatic"
+manual_modality = "manual"
+modality_change = 101
 
 # Initial state
 current_mode = normal_state
@@ -77,9 +78,10 @@ def read_serial():
         if ser.in_waiting:
             packet = ser.readline().decode("utf").rstrip("\n")
             print(packet)
-            if not packet or not packet.startswith("Mondality: ") or packet == system_modality:
+            if not packet or not packet.startswith("Modality: ") or packet == system_modality:
                 continue
-            system_modality = float(packet.split(" ")[2])
+            mod = float(packet.split(" ")[2])
+            system_modality = automatic_modality if mod == 0 else manual_modality;
             print("changed: " + system_modality)
 
 # Changes the values dependening on the state
@@ -91,11 +93,11 @@ def change_state(state, frequency, opening_level):
     current_state = state
     monitoring_frequency = frequency
     valve_opening_level = opening_level
+    send_data()
     
-def change_modality():
+def change_modality(modality):
     global system_modality
-    system_modality = manual_modality if system_modality == automatic_modality else automatic_modality
-    modality_change = 101
+    system_modality = modality
     ser.write(f"{modality_change}\n".encode())
 
 # Callback for when a message is received from the mqtt client
@@ -109,7 +111,6 @@ def on_message(client, userdata, msg):
     global water_level
 
     water_level = str(msg.payload.decode("utf-8"))
-    print(f"Water Level str: {water_level}")
     water_level = int(water_level)
     print(f"Water Level int: {water_level}")
 
@@ -123,19 +124,16 @@ def on_message(client, userdata, msg):
         change_state(alarm_too_high, F2, valve_alarm_high)
     else:
         change_state(alarm_too_high_critic, F2, valve_critic_high)
-        
-    send_data()
 
 # Returns the status of the system via an HTTP request
 @app.route("/status", methods=["GET"])
 def get_status():
     global water_level, current_state, valve_opening_level, system_modality
-    mod = 'automatic' if system_modality == automatic_modality else 'manual'
     return jsonify({
         "water_level": water_level,
         "system_state": current_state,
         "valve_opening_level": valve_opening_level,
-        "system_modality": mod
+        "system_modality": system_modality
     })
 
 # Changes the valve opening level via an HTTP request
@@ -144,11 +142,9 @@ def control_valve():
     global current_state, monitoring_frequency, valve_opening_level, system_modality
     try:
         if (system_modality == automatic_modality):
-        # Ottieni il livello di apertura desiderato dalla richiesta
-            valve_level = int(request.form.get("valve_level"))
-            change_state(current_state, monitoring_frequency, valve_level)
-        change_modality()
-        send_data()
+            change_modality()
+        valve_level = int(request.form.get("valve_level"))
+        change_state(current_state, monitoring_frequency, valve_level)
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
@@ -159,7 +155,6 @@ if __name__ == "__main__":
     print("MQTT Client started")
     t1 = threading.Thread(target=app.run, kwargs={'port': 5001, 'debug': False})
     t1.start()
-    print("Flask App started")
     try:
         while True:
             read_serial()
