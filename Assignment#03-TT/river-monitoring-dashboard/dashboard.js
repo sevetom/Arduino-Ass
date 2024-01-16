@@ -97,4 +97,4 @@ function updateChart() {
 // Get the initial status and start polling for updates.
 getStatus();
 
-setInterval(getStatus, 1000);
+setInterval(getStatus, 3000);
