@@ -34,5 +34,6 @@ void LcdDisplay::clear() {
 }
 
 void LcdDisplay::printInt(int value, int row, int line) {
+  this->lcd.setCursor(row, line);
   this->lcd.print(value);
 }

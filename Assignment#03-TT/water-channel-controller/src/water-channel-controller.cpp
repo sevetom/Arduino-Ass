@@ -36,7 +36,7 @@ Components* hw;
 void setup() {
     Serial.begin(9600);
     Serial.setTimeout(4);
-    Components* hw = new Components();
+    hw = new Components();
     currentModality = AUTOMATIC;
     currentAngle = 0;
     lastAngle = 0;
@@ -62,9 +62,10 @@ void loop() {
         changeModality();
     }
     if (value >= 0) {
+        Serial.println("Value: " + String(value) + " Current angle: " + String(currentAngle));
         currentAngle = map(value, MIN_PERC, MAX_PERC, hw->servo->getMinAngle(), hw->servo->getMaxAngle());
-        //moveServo();
-        //printStatus();
+        moveServo();
+        printStatus();
     }
 }
 
@@ -107,6 +108,7 @@ void moveServo() {
 }
 
 void printStatus() {
+    Serial.println("Current angle: " + String(currentAngle) + " Modality: " + String(currentModality));
     hw->lcd->printInt(currentAngle, 7, 0);
     hw->lcd->printText((currentModality == AUTOMATIC) ? "Automatic" : "Manual", 10, 1);
 }
