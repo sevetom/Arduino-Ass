@@ -9,7 +9,8 @@
 #define MIN_PERC 0
 #define MAX_PERC 100
 #define INVALID -1
-#define MODALITY_CHANGE 101
+#define MANUAL 101
+#define AUTOMATIC 102
 
 /**
  * @brief Change the modality of the system
@@ -34,7 +35,7 @@ void printStatus();
 
 volatile int currentAngle;
 volatile int lastAngle;
-volatile bool isManual;
+volatile int modality;
 Components* hw;
 volatile long timer;
 
@@ -42,7 +43,7 @@ void setup() {
     Serial.begin(9600);
     Serial.setTimeout(4);
     hw = new Components();
-    isManual = false;
+    modality = AUTOMATIC;
     currentAngle = 0;
     lastAngle = 0;
     //hw->button->setInterrupt(changeModality, true);
@@ -56,20 +57,19 @@ void loop() {
     // value starts as not needing an update
     int value = INVALID;
     // if the system is in manual mode then reads for a change in the potentiometer
-    if (isManual) {
+    if (modality == MANUAL) {
         value = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
     }
     /** if the values is still invalid then there could be two cases:
      *  1. the system is in automatic mode so we need the water level
      *  2. the system is in manual mode and the potentiometer has not changed
-     *     but we still need to check for a manual change made from the frontend */
+     *     but we still need to check for a modality change made from the frontend */
     if (value == INVALID) {
         value = serialReadInt();
     }
     // it's possible that it's needed to switch to manual mode
-    if (value == MODALITY_CHANGE) {
-        isManual = !isManual;
-        Serial.println("Manual mode: " + String(isManual));
+    if (value == AUTOMATIC || value == MANUAL) {
+        modality = value;
         printStatus();
         timer = 1;
     }
@@ -102,19 +102,22 @@ void loop() {
 }
 
 void changeModality() {
-    //noInterrupts();
     if (hw->button->avoidBouncing()) {
-        isManual = !isManual;
-        Serial.println("Manual: " + String(isManual));
-        delay(100);
+        modality = modality == MANUAL ? AUTOMATIC : MANUAL;
+        // Needed to comunicate the change to the service
+        Serial.println("Manual: " + String(MANUAL));
         printStatus();
     }
-    //interrupts();
 }
 
 int serialReadInt() {
     if (Serial.available()) {
         int data = (int)Serial.parseInt();
+        /**
+         * Every value needs to be decreased since 0 was
+         * causing problems when communicated through the
+         * serial line
+        */
         data--;
         Serial.println("Data: " + String(data));
         return data;
@@ -122,8 +125,13 @@ int serialReadInt() {
     return INVALID;
 }
 
+/**
+ * This is an alternative versione made to work with a
+ * particolar servo that only moves in two directions
+ * with the value being the speed and stopping when
+ * the value is 90
+*/
 void moveValve() {
-    Serial.println("Current angle: " + String(currentAngle) + " Last angle: " + String(lastAngle));
     int delta = 0;
     if (currentAngle > lastAngle) {
         delta = currentAngle - lastAngle;
@@ -132,18 +140,32 @@ void moveValve() {
         delta = lastAngle - currentAngle;
         hw->valve->setPosition(140);
     }
-    Serial.println("Delta: " + String(delta));
     delay(delta*10);
     hw->valve->setPosition(90);
     lastAngle = currentAngle;
-    Serial.println("Last angle: " + String(lastAngle));
 }
 
+/**
+ * This is the original versione made to work with a
+ * normal servo that moves in all directions
+*/
+/*
+void moveValve() {
+    pMotor->on();
+    for (int i = lastAngle; i != currentAngle; i += (currentAngle > lastAngle ? 1 : -1)) {
+        pMotor->setPosition(pos);         
+        delay(2);            
+        pos += delta;
+    }
+    pMotor->off();
+    lastAngle = currentAngle;
+*/
+
 void printStatus() {
-    Serial.println("Current angle: " + String(currentAngle) + " Modality: " + String(isManual));
+    Serial.println("Angle: " + String(currentAngle) + " Modality: " + String(modality));
     hw->lcd->clear();
     hw->lcd->printText("Angle: ", 0, 0);
     hw->lcd->printText("Mod: ", 0, 1);
     hw->lcd->printInt(currentAngle, 7, 0);
-    hw->lcd->printText(isManual ? "Manual" : "Auto", 5, 1);
+    hw->lcd->printText(modality == MANUAL ? "Manual" : "Auto", 5, 1);
 }

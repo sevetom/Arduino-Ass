@@ -16,7 +16,8 @@
             <form id="control-form">
                 <label for="valve-level-input">Set Valve Opening Level (0-100): </label>
                 <input type="number" id="valve-level-input" name="valve_level" min="0" max="100" required>
-                <button id="manual-button" type="button" onclick="controlValve()">Control Valve</button>
+                <button id="manual-button" type="button" onclick="controlValve('manual')">Control Valve</button>
+                <button id="automatic-button" type="button" onclick="controlValve('automatic')" disabled>Automativ Mode</button>
             </form>
             <canvas id="water-level-chart" style="width:30%;height:50%"></canvas>
         </body>

@@ -53,7 +53,8 @@ alarm_too_high = "ALARM-TOO-HIGH"
 alarm_too_high_critic = "ALARM-TOO-HIGH-CRITIC"
 automatic_modality = "automatic"
 manual_modality = "manual"
-modality_change = 101+1
+manual_change = 101+1
+automatic_change = 102+1
 
 # Initial state
 current_mode = normal_state
@@ -86,7 +87,7 @@ def read_serial():
             if not packet or not packet.startswith("Modality: ") or packet == system_modality:
                 continue
             mod = float(packet.split(" ")[1])
-            system_modality = automatic_modality if mod == 0 else manual_modality
+            system_modality = automatic_modality if mod == automatic_change else manual_modality
             print("changed: " + system_modality)
 
 # Changes the values dependening on the state
@@ -99,11 +100,15 @@ def change_state(state, frequency, opening_level):
     monitoring_frequency = frequency
     valve_opening_level = opening_level
     send_data()
-    
+
+# Changes the modality of the system and notifies arduino
 def change_modality(modality):
     global system_modality
     system_modality = modality
-    ser.write(f"{modality_change}\n".encode())
+    if (modality == manual_modality):
+        ser.write(f"{manual_change}\n".encode())
+    else:
+        ser.write(f"{automatic_change}\n".encode())
 
 # Callback for when a message is received from the mqtt client
 def on_message(client, userdata, msg):
@@ -119,6 +124,7 @@ def on_message(client, userdata, msg):
     water_level = int(water_level)
     print(f"Water Level int: {water_level}")
 
+    # calculate the new state
     if WL1 <= water_level <= WL2:
         change_state(normal_state, F1, valve_normal)
     elif water_level < WL1:
@@ -129,7 +135,7 @@ def on_message(client, userdata, msg):
         change_state(alarm_too_high, F2, valve_alarm_high)
     else:
         change_state(alarm_too_high_critic, F2, valve_critic_high)
-        
+    # notify all the other systems 
     send_data()
 
 # Returns the status of the system via an HTTP request
@@ -146,12 +152,15 @@ def get_status():
 # Changes the valve opening level via an HTTP request
 @app.route("/control", methods=["POST"])
 def control_valve():
-    global current_state, monitoring_frequency, valve_opening_level, system_modality
+    global current_state, monitoring_frequency, system_modality
     try:
-        if (system_modality == automatic_modality):
-            change_modality(manual_modality)
         valve_level = int(request.form.get("valve_level"))
-        send_data()
+        if (valve_level < 0 and system_modality == manual_modality):
+            change_modality(automatic_modality)
+        else:
+            if (system_modality == automatic_modality):
+                change_modality(manual_modality)
+            change_state(current_state, monitoring_frequency, valve_level)
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
@@ -165,7 +174,6 @@ if __name__ == "__main__":
     try:
         while True:
             read_serial()
-            time.sleep(1)
     except KeyboardInterrupt:
         mqtt_client.disconnect()
         mqtt_client.loop_stop()

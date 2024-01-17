@@ -16,7 +16,13 @@ function getStatus() {
         .then(data => {
             document.getElementById('system-state').innerText = 'System State: ' + data.system_state;
             document.getElementById('valve-opening').innerText = 'Valve Opening Level: ' + data.valve_opening_level + '%';
-            document.getElementById('system-modality').innerText = 'System Modality: ' + data.system_modality;
+            document.getElementById('system-modality').innerText = 'Water Level: ' + data.system_modality;
+            switch (data.system_modality) {
+                case "manual":
+                    document.getElementById('automatic-button').disabled = false;
+                case "automatic":
+                    document.getElementById('automatic-button').disabled = true;
+            }
             const timestamp = new Date().toLocaleTimeString();
             timestamps.push(timestamp);
             if (waterLevels.length >= 60) {
@@ -31,28 +37,51 @@ function getStatus() {
 
 /**
  * Controls the valve based on the value of the valve level input.
+ * @param {string} modality - The modality of the system.
  */
-function controlValve() {
-    const valveLevelInput = document.getElementById('valve-level-input');
-    const valveLevel = valveLevelInput.value;
-    fetch('http://127.0.0.1:5001/control', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                valve_level: valveLevel,
+function controlValve(modality) {
+    switch (modality) {
+        case 'manual':
+        const valveLevelInput = document.getElementById('valve-level-input');
+        const valveLevel = valveLevelInput.value;
+        fetch('http://127.0.0.1:5001/control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    valve_level: valveLevel,
+                })
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                getStatus();
-            } else {
-                console.error('Failed to control the valve:', data.message);
-            }
-        })
-        .catch(error => console.error('Error controlling the valve:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    getStatus();
+                } else {
+                    console.error('Failed to control the valve:', data.message);
+                }
+            })
+            .catch(error => console.error('Error controlling the valve:', error));
+        case 'automatic':
+            fetch('http://127.0.0.1:5001/control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    valve_level: -1,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    getStatus();
+                } else {
+                    console.error('Failed to change the modality:', data.message);
+                }
+            })
+            .catch(error => console.error('Error changing the modality:', error));
+    }
 }
 
 /**
@@ -97,4 +126,5 @@ function updateChart() {
 // Get the initial status and start polling for updates.
 getStatus();
 
+// updates the values displayed in the dashboard every 3 seconds
 setInterval(getStatus, 3000);

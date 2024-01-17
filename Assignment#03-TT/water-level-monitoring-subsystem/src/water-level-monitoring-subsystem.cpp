@@ -37,6 +37,7 @@ void setup() {
 	hw->greenLed->off();
 	hw->redLed->on();
 	frequency = 0;
+	// this need to be setted for the connection to the wifi
 	const char* wifi_ssid = "iCereLan-FASTWEB";
 	const char* wifi_password = "iLanVeloce";
 	const char* mqtt_server = "192.168.178.31";
@@ -58,7 +59,6 @@ void loop() {
 
 void checkConnection() {
 	if (!connection->getStatus()) {
-		Serial.println("Connessione persa");
 		hw->greenLed->off();
 		hw->redLed->on();
 		connection->reconnectServer();
