@@ -51,8 +51,11 @@ alarm_too_low = "ALARM-TOO-LOW"
 pre_alarm_too_high = "PRE-ALARM-TOO-HIGH"
 alarm_too_high = "ALARM-TOO-HIGH"
 alarm_too_high_critic = "ALARM-TOO-HIGH-CRITIC"
+# modalities of the system
 automatic_modality = "automatic"
 manual_modality = "manual"
+# modalities used to transition from automatic to manual and viceversa
+# this are plus one for serial line problems
 manual_change = 101+1
 automatic_change = 102+1
 
@@ -70,6 +73,8 @@ water_level = 0
 def send_data():
     global monitoring_frequency
     global valve_opening_level
+    # every value sent to arduino is plus 1 since
+    # 0 was creating issues on the serial line
     tmp = valve_opening_level+1
     ser.write(f"{tmp}\n".encode())
     print(f"Sending arduino: {tmp}")
@@ -87,7 +92,7 @@ def read_serial():
             if not packet or not packet.startswith("Modality: ") or packet == system_modality:
                 continue
             mod = float(packet.split(" ")[1])
-            system_modality = automatic_modality if mod == automatic_change else manual_modality
+            system_modality = automatic_modality if mod == automatic_change-1 else manual_modality
             print("changed: " + system_modality)
 
 # Changes the values dependening on the state
