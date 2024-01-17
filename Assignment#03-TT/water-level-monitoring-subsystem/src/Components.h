@@ -4,8 +4,8 @@
 #include "Led.h"
 #include "Sonar.h"
 
-#define GREEN_LED 2
-#define RED_LED 4
+#define GREEN_LED 4
+#define RED_LED 16
 #define SONAR_TRIG 12
 #define SONAR_ECHO 14
 

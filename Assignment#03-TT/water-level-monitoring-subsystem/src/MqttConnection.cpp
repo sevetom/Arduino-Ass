@@ -12,7 +12,7 @@ MqttConnection::MqttConnection(const char* wifi_ssid, const char* wifi_password,
 
 void MqttConnection::connect() {
     WiFi.begin(this->wifi_ssid, this->wifi_password);
-    Serial.println("Connecting to WiFi");
+    delay(100);
     while(WiFi.status() != WL_CONNECTED) {
       delay(500);
       Serial.print(".");

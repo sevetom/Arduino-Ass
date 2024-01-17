@@ -35,7 +35,9 @@ void setup() {
 	Serial.begin(115200);
 	hw = new Components();
 	hw->greenLed->off();
+	delay(100);
 	hw->redLed->on();
+	delay(100);
 	frequency = 0;
 	const char* wifi_ssid = "iCereLan-FASTWEB";
 	const char* wifi_password = "iLanVeloce";
@@ -46,8 +48,9 @@ void setup() {
 	connection = new MqttConnection(wifi_ssid, wifi_password, mqtt_server, mqtt_port, mqtt_topic_read, mqtt_topic_send);
 	connection->setCall(callback);
 	connection->connect();
-	hw->greenLed->on();
 	hw->redLed->off();
+	delay(100);
+	hw->greenLed->on();
 }
 
 void loop() {
@@ -59,11 +62,16 @@ void loop() {
 
 void checkConnection() {
 	if (!connection->getStatus()) {
+		Serial.println("Connessione persa");
 		hw->greenLed->off();
+		delay(100);
 		hw->redLed->on();
+		delay(100);
 		connection->reconnectServer();
-		hw->greenLed->on();
 		hw->redLed->off();
+		delay(100);
+		hw->greenLed->on();
+		delay(100);
 	}
 	connection->tick();
 }
