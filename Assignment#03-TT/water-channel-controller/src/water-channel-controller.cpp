@@ -12,14 +12,6 @@
 #define MODALITY_CHANGE 101
 
 /**
- * @brief The modality of the system
-*/
-typedef enum {
-    AUTOMATIC,
-    MANUAL
-} modality;
-
-/**
  * @brief Change the modality of the system
 */
 void changeModality();
@@ -40,29 +32,31 @@ void moveValve();
 */
 void printStatus();
 
-volatile modality currentModality;
 volatile int currentAngle;
 volatile int lastAngle;
+volatile bool isManual;
 Components* hw;
+volatile long timer;
 
 void setup() {
     Serial.begin(9600);
     Serial.setTimeout(4);
     hw = new Components();
-    currentModality = AUTOMATIC;
+    isManual = false;
     currentAngle = 0;
     lastAngle = 0;
-    hw->button->setInterrupt(changeModality, true);
+    //hw->button->setInterrupt(changeModality, true);
     hw->lcd->printText("Angle: ", 0, 0);
     hw->lcd->printText("Mod: ", 0, 1);
     hw->valve->on();
+    timer = 0;
 }
 
 void loop() {
     // value starts as not needing an update
     int value = INVALID;
     // if the system is in manual mode then reads for a change in the potentiometer
-    if (currentModality == MANUAL) {
+    if (isManual) {
         value = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
     }
     /** if the values is still invalid then there could be two cases:
@@ -74,7 +68,10 @@ void loop() {
     }
     // it's possible that it's needed to switch to manual mode
     if (value == MODALITY_CHANGE) {
-        currentModality = MANUAL;
+        isManual = !isManual;
+        Serial.println("Manual mode: " + String(isManual));
+        printStatus();
+        timer = 1;
     }
     // once everything is done we can update the angle if needed
     if (value >= MIN_PERC && value <= MAX_PERC) {
@@ -84,20 +81,41 @@ void loop() {
             printStatus();
         }
     }
+    if (timer > 0) {
+        timer ++;
+        if (timer > 50000){
+            timer = 0;
+            Serial.println("PRONTO?!?!?!?");
+            delay(2000);
+            Serial.println("3");
+            delay(1000);
+            Serial.println("2");
+            delay(1000);
+            Serial.println("1");
+            delay(1000);
+            Serial.println("Premi");
+            isManual = !isManual;
+            Serial.println("Modality: " + String(isManual));
+            printStatus();
+        }
+    }
 }
 
 void changeModality() {
+    //noInterrupts();
     if (hw->button->avoidBouncing()) {
-        currentModality = (currentModality == AUTOMATIC) ? MANUAL : AUTOMATIC;
-        Serial.println("Current modality: " + String(currentModality));
+        isManual = !isManual;
+        Serial.println("Manual: " + String(isManual));
         delay(100);
         printStatus();
     }
+    //interrupts();
 }
 
 int serialReadInt() {
     if (Serial.available()) {
         int data = (int)Serial.parseInt();
+        data--;
         Serial.println("Data: " + String(data));
         return data;
     }
@@ -122,10 +140,10 @@ void moveValve() {
 }
 
 void printStatus() {
-    Serial.println("Current angle: " + String(currentAngle) + " Modality: " + String(currentModality));
+    Serial.println("Current angle: " + String(currentAngle) + " Modality: " + String(isManual));
     hw->lcd->clear();
     hw->lcd->printText("Angle: ", 0, 0);
     hw->lcd->printText("Mod: ", 0, 1);
     hw->lcd->printInt(currentAngle, 7, 0);
-    hw->lcd->printText((currentModality == AUTOMATIC) ? "Automatic" : "Manual", 5, 1);
+    hw->lcd->printText(isManual ? "Manual" : "Auto", 5, 1);
 }

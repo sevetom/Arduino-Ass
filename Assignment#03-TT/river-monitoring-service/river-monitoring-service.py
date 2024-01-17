@@ -29,10 +29,10 @@ app = Flask(__name__)
 CORS(app)
 
 # Water Level Thresholds
-WL1 = 10
-WL2 = 20
-WL3 = 30
-WL4 = 40
+WL1 = 50
+WL2 = 80
+WL3 = 110
+WL4 = 150
 
 # Monitoring Frequencies in seconds
 F1 = 2000
@@ -53,7 +53,7 @@ alarm_too_high = "ALARM-TOO-HIGH"
 alarm_too_high_critic = "ALARM-TOO-HIGH-CRITIC"
 automatic_modality = "automatic"
 manual_modality = "manual"
-modality_change = 101
+modality_change = 101+1
 
 # Initial state
 current_mode = normal_state
@@ -69,9 +69,9 @@ water_level = 0
 def send_data():
     global monitoring_frequency
     global valve_opening_level
-
-    ser.write(f"{valve_opening_level}\n".encode())
-    print(f"Sending arduino: {valve_opening_level}")
+    tmp = valve_opening_level+1
+    ser.write(f"{tmp}\n".encode())
+    print(f"Sending arduino: {tmp}")
 
     mqtt_payload = f"{monitoring_frequency}"
     print(f"Sending: {mqtt_payload}")
@@ -85,8 +85,8 @@ def read_serial():
             print(packet)
             if not packet or not packet.startswith("Modality: ") or packet == system_modality:
                 continue
-            mod = float(packet.split(" ")[2])
-            system_modality = automatic_modality if mod == 0 else manual_modality;
+            mod = float(packet.split(" ")[1])
+            system_modality = automatic_modality if mod == 0 else manual_modality
             print("changed: " + system_modality)
 
 # Changes the values dependening on the state
@@ -129,6 +129,8 @@ def on_message(client, userdata, msg):
         change_state(alarm_too_high, F2, valve_alarm_high)
     else:
         change_state(alarm_too_high_critic, F2, valve_critic_high)
+        
+    send_data()
 
 # Returns the status of the system via an HTTP request
 @app.route("/status", methods=["GET"])
@@ -147,9 +149,9 @@ def control_valve():
     global current_state, monitoring_frequency, valve_opening_level, system_modality
     try:
         if (system_modality == automatic_modality):
-            change_modality()
+            change_modality(manual_modality)
         valve_level = int(request.form.get("valve_level"))
-        change_state(current_state, monitoring_frequency, valve_level)
+        send_data()
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500

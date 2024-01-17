@@ -16,7 +16,7 @@ function getStatus() {
         .then(data => {
             document.getElementById('system-state').innerText = 'System State: ' + data.system_state;
             document.getElementById('valve-opening').innerText = 'Valve Opening Level: ' + data.valve_opening_level + '%';
-            document.getElementById('system-modality').innerText = 'Water Level: ' + data.system_modality + '%';
+            document.getElementById('system-modality').innerText = 'System Modality: ' + data.system_modality;
             const timestamp = new Date().toLocaleTimeString();
             timestamps.push(timestamp);
             if (waterLevels.length >= 60) {

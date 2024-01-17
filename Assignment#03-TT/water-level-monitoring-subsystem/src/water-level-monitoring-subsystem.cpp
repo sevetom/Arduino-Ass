@@ -35,9 +35,7 @@ void setup() {
 	Serial.begin(115200);
 	hw = new Components();
 	hw->greenLed->off();
-	delay(100);
 	hw->redLed->on();
-	delay(100);
 	frequency = 0;
 	const char* wifi_ssid = "iCereLan-FASTWEB";
 	const char* wifi_password = "iLanVeloce";
@@ -49,7 +47,6 @@ void setup() {
 	connection->setCall(callback);
 	connection->connect();
 	hw->redLed->off();
-	delay(100);
 	hw->greenLed->on();
 }
 
@@ -57,21 +54,16 @@ void loop() {
 	checkConnection();
 	sendWaterLevel();
 	delay(frequency);
-	delay(1000);
 }
 
 void checkConnection() {
 	if (!connection->getStatus()) {
 		Serial.println("Connessione persa");
 		hw->greenLed->off();
-		delay(100);
 		hw->redLed->on();
-		delay(100);
 		connection->reconnectServer();
 		hw->redLed->off();
-		delay(100);
 		hw->greenLed->on();
-		delay(100);
 	}
 	connection->tick();
 }
@@ -94,8 +86,7 @@ int byteArrayToInt(const unsigned char* byteArray, size_t size) {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-	if (topic == connection->getTopic()) {
-		Serial.println();
+	if (strcmp(topic, connection->getTopic()) == 0) {
 		Serial.print("valore ricevuto: ");
 		frequency = byteArrayToInt(payload, length);
 		Serial.println(frequency);

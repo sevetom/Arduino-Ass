@@ -3,6 +3,7 @@
 Button::Button(int pin){
     this->pin = pin;
     pinMode(pin, INPUT);
+    this->prevts = 0;
 }
 
 void Button::setInterrupt(InterruptFunction intFun, bool attach){

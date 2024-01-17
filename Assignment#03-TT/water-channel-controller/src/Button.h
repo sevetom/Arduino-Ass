@@ -10,7 +10,7 @@
 */
 class Button{
   int pin;
-  long prevts = 0;
+  long prevts;
   using InterruptFunction = void (*)(void);
 public:
   /**
