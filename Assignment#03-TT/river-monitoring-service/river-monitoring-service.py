@@ -31,8 +31,8 @@ CORS(app)
 # Water Level Thresholds
 WL1 = 50
 WL2 = 80
-WL3 = 110
-WL4 = 150
+WL3 = 100
+WL4 = 140
 
 # Monitoring Frequencies in seconds
 F1 = 2000
@@ -69,6 +69,9 @@ valve_opening_level = valve_normal
 # Water Level
 water_level = 0
 
+current_state = "initial_state"
+monitoring_frequency = 0
+
 # Sends the data to the arduino and the mqtt client
 def send_data():
     global monitoring_frequency
@@ -77,10 +80,10 @@ def send_data():
     # 0 was creating issues on the serial line
     tmp = valve_opening_level+1
     ser.write(f"{tmp}\n".encode())
-    print(f"Sending arduino: {tmp}")
+    print(f"PY Sending arduino: {tmp}")
 
     mqtt_payload = f"{monitoring_frequency}"
-    print(f"Sending: {mqtt_payload}")
+    print(f"PY Sending: {mqtt_payload}")
     mqtt_client.publish(mqtt_topic_send, mqtt_payload)
 
 def read_serial():
@@ -93,7 +96,7 @@ def read_serial():
                 continue
             mod = float(packet.split(" ")[1])
             system_modality = automatic_modality if mod == automatic_change-1 else manual_modality
-            print("changed: " + system_modality)
+            print("PY changed: " + system_modality)
 
 # Changes the values dependening on the state
 def change_state(state, frequency, opening_level):
@@ -127,7 +130,7 @@ def on_message(client, userdata, msg):
 
     water_level = str(msg.payload.decode("utf-8"))
     water_level = int(water_level)
-    print(f"Water Level int: {water_level}")
+    print(f"PY Water Level int: {water_level}")
 
     # calculate the new state
     if WL1 <= water_level <= WL2:
@@ -147,6 +150,7 @@ def on_message(client, userdata, msg):
 @app.route("/status", methods=["GET"])
 def get_status():
     global water_level, current_state, valve_opening_level, system_modality
+    print(f"PY STATUS current modal: {system_modality} and current state: {current_state}")
     return jsonify({
         "water_level": water_level,
         "system_state": current_state,
@@ -160,20 +164,24 @@ def control_valve():
     global current_state, monitoring_frequency, system_modality
     try:
         valve_level = int(request.form.get("valve_level"))
+        print(f"PY CONTROL Valve level: {valve_level}")
         if (valve_level < 0 and system_modality == manual_modality):
+            print("PY CONTROL Changing modality to automatic")
             change_modality(automatic_modality)
         else:
             if (system_modality == automatic_modality):
+                print("PY CONTROL Changing modality to manual")
                 change_modality(manual_modality)
             change_state(current_state, monitoring_frequency, valve_level)
         return jsonify({"success": True})
     except Exception as e:
+        print("PY CONTROL Error: " + str(e))
         return jsonify({"success": False, "message": str(e)}), 500
 
 if __name__ == "__main__":
     mqtt_client.on_message = on_message
     mqtt_client.loop_start()
-    print("MQTT Client started")
+    print("PY MQTT Client started")
     t1 = threading.Thread(target=app.run, kwargs={'port': 5001, 'debug': False})
     t1.start()
     try:

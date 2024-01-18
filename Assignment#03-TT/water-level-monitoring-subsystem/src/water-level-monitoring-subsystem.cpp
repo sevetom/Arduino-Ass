@@ -70,7 +70,10 @@ void checkConnection() {
 
 void sendWaterLevel() {
 	char message[10];
-	int waterLevel = CHANNEL_HEIGHT - hw->sonar->getDistance();
+	float sensorValue = hw->sonar->getDistance();
+	Serial.print("Sensor value: ");
+	Serial.println(sensorValue);
+	int waterLevel = CHANNEL_HEIGHT - sensorValue;
 	sprintf(message, "%d", waterLevel);
 	connection->sendMessagge(message);
 }

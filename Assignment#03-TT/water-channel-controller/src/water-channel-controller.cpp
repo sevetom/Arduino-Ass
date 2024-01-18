@@ -59,6 +59,9 @@ void loop() {
     // if the system is in manual mode then reads for a change in the potentiometer
     if (modality == MANUAL) {
         value = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
+        if (value == AUTOMATIC || value == MANUAL) {
+            value = INVALID;
+        }
     }
     /** if the values is still invalid then there could be two cases:
      *  1. the system is in automatic mode so we need the water level
@@ -69,6 +72,7 @@ void loop() {
     }
     // it's possible that it's needed to switch to manual mode
     if (value == AUTOMATIC || value == MANUAL) {
+        Serial.println("AR set modality: " + String(value));
         modality = value;
         printStatus();
         timer = 1;
@@ -94,8 +98,8 @@ void loop() {
             Serial.println("1");
             delay(1000);
             Serial.println("Premi");
-            isManual = !isManual;
-            Serial.println("Modality: " + String(isManual));
+            modality = AUTOMATIC;
+            Serial.println("Modality: " + String(modality));
             printStatus();
         }
     }

@@ -43,7 +43,7 @@ void MqttConnection::reconnectServer() {
 }
 
 void MqttConnection::sendMessagge(char* message) {
-    Serial.println("Sending message" + String(message));
+    Serial.println("Sending message: " + String(message));
     this->client.publish(this->mqtt_topic_send, message);
 }
 

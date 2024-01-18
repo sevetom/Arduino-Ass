@@ -10,6 +10,8 @@
 */
 class Sonar {
     NewPing* sonar;
+    int trigPin;
+    int echoPin;
 public:
     /**
      * Initialize the sonar sensor
@@ -21,7 +23,7 @@ public:
      * Get the distance from the sonar sensor in cm
      * @return The distance from the sonar sensor in cm
     */
-    int getDistance();
+    float getDistance();
 };
 
 #endif
