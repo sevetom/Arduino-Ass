@@ -38,9 +38,9 @@ void setup() {
 	hw->redLed->on();
 	frequency = 0;
 	// this need to be setted for the connection to the wifi
-	const char* wifi_ssid = "iCereLan-FASTWEB";
-	const char* wifi_password = "iLanVeloce";
-	const char* mqtt_server = "192.168.178.31";
+	const char* wifi_ssid = "";
+	const char* wifi_password = "";
+	const char* mqtt_server = "";
 	int mqtt_port = 1883;
 	const char* mqtt_topic_read = "monitoring-frequency";
 	const char* mqtt_topic_send = "water-level";

@@ -11,7 +11,7 @@ import threading
 '''
 
 # Connects to the mqtt server
-mqtt_server = "192.168.178.31"
+mqtt_server = ""
 mqtt_port = 1883
 mqtt_topic_read = "water-level"
 mqtt_topic_send = "monitoring-frequency"
@@ -20,7 +20,7 @@ mqtt_client.connect(mqtt_server, mqtt_port, 60)
 mqtt_client.subscribe(mqtt_topic_read)
 
 # Arduino config
-arduino_serial_port = "COM3"
+arduino_serial_port = ""
 arduino_serial_baudrate = "9600"
 ser = serial.Serial(arduino_serial_port, arduino_serial_baudrate)
 
@@ -60,7 +60,7 @@ manual_change = 101+1
 automatic_change = 102+1
 
 # Initial state
-current_mode = normal_state
+current_state = normal_state
 system_modality = automatic_modality
 # Initial monitoring frequency
 monitoring_frequency = F1
@@ -68,9 +68,6 @@ monitoring_frequency = F1
 valve_opening_level = valve_normal
 # Water Level
 water_level = 0
-
-current_state = "initial_state"
-monitoring_frequency = 0
 
 # Sends the data to the arduino and the mqtt client
 def send_data():

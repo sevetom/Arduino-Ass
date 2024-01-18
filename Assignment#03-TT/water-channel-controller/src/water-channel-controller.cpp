@@ -37,7 +37,6 @@ volatile int currentAngle;
 volatile int lastAngle;
 volatile int modality;
 Components* hw;
-volatile long timer;
 
 void setup() {
     Serial.begin(9600);
@@ -46,60 +45,38 @@ void setup() {
     modality = AUTOMATIC;
     currentAngle = 0;
     lastAngle = 0;
-    //hw->button->setInterrupt(changeModality, true);
+    hw->button->setInterrupt(changeModality, true);
     hw->lcd->printText("Angle: ", 0, 0);
     hw->lcd->printText("Mod: ", 0, 1);
     hw->valve->on();
-    timer = 0;
 }
 
 void loop() {
     // value starts as not needing an update
     int value = INVALID;
-    // if the system is in manual mode then reads for a change in the potentiometer
-    if (modality == MANUAL) {
-        value = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
-        if (value == AUTOMATIC || value == MANUAL) {
-            value = INVALID;
+    // reads the serial value in any case
+    int serialValue = serialReadInt();
+    // checks for a modality change
+    if (serialValue == AUTOMATIC || serialValue == MANUAL) {
+        noInterrupts();
+        modality = serialValue;
+        interrupts();
+    } else {
+        currentAngle = INVALID;
+        if (modality == MANUAL) {
+            currentAngle = hw->pot->detectChange() ? hw->pot->getValue() : INVALID;
         }
-    }
-    /** if the values is still invalid then there could be two cases:
-     *  1. the system is in automatic mode so we need the water level
-     *  2. the system is in manual mode and the potentiometer has not changed
-     *     but we still need to check for a modality change made from the frontend */
-    if (value == INVALID) {
-        value = serialReadInt();
-    }
-    // it's possible that it's needed to switch to manual mode
-    if (value == AUTOMATIC || value == MANUAL) {
-        Serial.println("AR set modality: " + String(value));
-        modality = value;
-        printStatus();
-        timer = 1;
-    }
-    // once everything is done we can update the angle if needed
-    if (value >= MIN_PERC && value <= MAX_PERC) {
-        currentAngle = map(value, MIN_PERC, MAX_PERC, hw->valve->getMinAngle(), hw->valve->getMaxAngle());
-        if (currentAngle != lastAngle) {
+        // if the modality is automatic or the potentiometer has not changed
+        // the serial value is used to update the angle
+        if (currentAngle == INVALID) {
+            if (serialValue >= MIN_PERC && serialValue <= MAX_PERC) {
+                // needs to be mapped since it's a percentage
+                currentAngle = map(serialValue, MIN_PERC, MAX_PERC, hw->valve->getMinAngle(), hw->valve->getMaxAngle());
+            }
+        }
+        // only if a new angle is sampled and it's different from the last one it is updated
+        if (currentAngle != INVALID && currentAngle != lastAngle) {
             moveValve();
-            printStatus();
-        }
-    }
-    if (timer > 0) {
-        timer ++;
-        if (timer > 50000){
-            timer = 0;
-            Serial.println("PRONTO?!?!?!?");
-            delay(2000);
-            Serial.println("3");
-            delay(1000);
-            Serial.println("2");
-            delay(1000);
-            Serial.println("1");
-            delay(1000);
-            Serial.println("Premi");
-            modality = AUTOMATIC;
-            Serial.println("Modality: " + String(modality));
             printStatus();
         }
     }
